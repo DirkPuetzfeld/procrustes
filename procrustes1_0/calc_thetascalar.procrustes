@@ -1,0 +1,7 @@
+calc_thetascalar := proc (CCdisporder) local zwischen, Otheta, Ptheta; global
+thetascalar; thetascalar := add(cuu[ii,ii],ii = 1 .. 4); Otheta := subs(
+sublist,collect(expand(thetascalar),1/c)); Ptheta := subs([seq(1/(c^ii) = 0,ii
+= CCdisporder .. CCmaxorder)],collect(expand(Otheta),1/c)); print(
+`Expansion uu (thetascalar)`,subs(displist,Ptheta)); if CCoutputfs = 2 then 
+zwischen := thetascalar; save zwischen, cat(`thetascalar.full.mpi`) end if end
+proc;

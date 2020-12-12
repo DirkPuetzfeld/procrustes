@@ -1,0 +1,9 @@
+check_decomposition := proc (CCdisporder) local ii, jj, crossc, Pcrossc, 
+Ocrossc; for ii to 4 do for jj to 4 do crossc[ii,jj] := omegadd[ii,jj]+sigmadd
+[ii,jj]+1/3*thetascalar*(gdd[ii,jj]-ud[ii]*ud[jj])+ud[jj]*acd[ii]; Ocrossc[ii,
+jj] := subs(sublist,collect(expand(crossc[ii,jj]),1/c)); Pcrossc[ii,jj] := 
+subs([seq(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Ocrossc
+[ii,jj]),1/c)); print(`Crosscheck[`,ii-1,jj-1,`]:`,subs(displist,Pcrossc[ii,jj
+]),`\n compare \n`,subs(displist,subs([seq(1/(c^ii) = 0,ii = CCdisporder .. 
+CCmaxorder)],collect(expand(subs(sublist,collect(expand(cud[ii,jj]),1/c))),1/c
+)))) end do end do end proc;

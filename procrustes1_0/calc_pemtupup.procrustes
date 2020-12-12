@@ -1,0 +1,17 @@
+calc_pemtupup := proc (CCdisporder) local ii, kk, zwischen, Opemtupup, 
+Ppemtupup; global pemtupup; for ii to 4 do for kk to 4 do pemtupup[ii,kk] := 1
+/2*c^4/kappa*add(add(add(add((2*conupdndn[nn,ll,mm]*conupdndn[pp,nn,pp]-
+conupdndn[nn,ll,pp]*conupdndn[pp,mm,nn]-conupdndn[nn,ll,nn]*conupdndn[pp,mm,pp
+])*(guu[ii,ll]*guu[kk,mm]-guu[ii,kk]*guu[ll,mm])+guu[ii,ll]*guu[mm,nn]*(
+conupdndn[kk,ll,pp]*conupdndn[pp,mm,nn]+conupdndn[kk,mm,nn]*conupdndn[pp,ll,pp
+]-conupdndn[kk,nn,pp]*conupdndn[pp,ll,mm]-conupdndn[kk,ll,mm]*conupdndn[pp,nn,
+pp])+guu[kk,ll]*guu[mm,nn]*(conupdndn[ii,ll,pp]*conupdndn[pp,mm,nn]+conupdndn[
+ii,mm,nn]*conupdndn[pp,ll,pp]-conupdndn[ii,nn,pp]*conupdndn[pp,ll,mm]-
+conupdndn[ii,ll,mm]*conupdndn[pp,nn,pp])+guu[ll,mm]*guu[nn,pp]*(conupdndn[ii,
+ll,nn]*conupdndn[kk,mm,pp]-conupdndn[ii,ll,mm]*conupdndn[kk,nn,pp]),nn = 1 ..
+4),mm = 1 .. 4),ll = 1 .. 4),pp = 1 .. 4); Opemtupup[ii,kk] := subs(sublist,
+collect(expand(pemtupup[ii,kk]),1/c)); Ppemtupup[ii,kk] := subs([seq(1/(c^ii)
+= 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Opemtupup[ii,kk]),1/c)); 
+print(`LL EMPT (pemtupup)[`,ii-1,kk-1,`]`,subs(displist,Ppemtupup[ii,kk])); if
+CCoutputfs = 2 then zwischen := pemtupup[ii,kk]; save zwischen, cat(pemtupup_,
+ii,_,kk,`.full.mpi`) end if end do end do end proc;

@@ -1,0 +1,3 @@
+load_thetaupuppdn := proc (CCredfull) local aa; global thetaupuppdn; for aa to
+4 do thetaupuppdn[aa] := load_component(thetaupuppdn,[aa],CCredfull) end do; 
+RETURN() end proc;

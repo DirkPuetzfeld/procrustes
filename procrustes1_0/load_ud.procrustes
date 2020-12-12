@@ -1,0 +1,2 @@
+load_ud := proc (CCredfull) local aa; global ud; for aa to 4 do ud[aa] := 
+load_component(ud,[aa],CCredfull) end do; RETURN() end proc;

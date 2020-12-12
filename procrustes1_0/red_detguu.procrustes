@@ -1,0 +1,4 @@
+red_detguu := proc (CCtruncorder) local TRUNCdetguu, zwischen; global detguu;
+TRUNCdetguu := subs([seq(1/(c^ii) = 0,ii = CCtruncorder .. CCmaxorder)],
+collect(detguu,1/c)); detguu := TRUNCdetguu; if CCoutputfs = 2 then zwischen 
+:= TRUNCdetguu; save zwischen, cat(`detguu.red.mpi`) end if end proc;

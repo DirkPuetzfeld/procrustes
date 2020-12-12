@@ -1,0 +1,8 @@
+red_riemdndndndn := proc (CCtruncorder) local ii, jj, aa, bb, 
+TRUNCriemdndndndn, zwischen; global riemdndndndn; for ii to 4 do for jj to 4 
+do for aa to 4 do for bb to 4 do TRUNCriemdndndndn[ii,jj,aa,bb] := subs([seq(1
+/(c^ii) = 0,ii = CCtruncorder .. CCmaxorder)],collect(riemdndndndn[ii,jj,aa,bb
+],1/c)); riemdndndndn[ii,jj,aa,bb] := TRUNCriemdndndndn[ii,jj,aa,bb]; if 
+CCoutputfs = 2 then zwischen := TRUNCriemdndndndn[ii,jj,aa,bb]; save zwischen,
+cat(riemdndndndn_,ii,_,jj,_,aa,_,bb,`.red.mpi`) end if end do end do end do 
+end do end proc;

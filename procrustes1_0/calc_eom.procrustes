@@ -1,0 +1,7 @@
+calc_eom := proc (CCdisporder) local aa, zwischen, Oeom, Peom; global eom; for
+aa to 4 do eom[aa] := add(ctupup[aa,bb,bb],bb = 1 .. 4); Oeom[aa] := subs(
+sublist,collect(expand(eom[aa]),1/c)); Peom[aa] := subs([seq(1/(c^ii) = 0,ii =
+CCdisporder .. CCmaxorder)],collect(expand(Oeom[aa]),1/c)); print(
+`Equations of motion (eom)[`,aa-1,`]`,subs(displist,Peom[aa])); if CCoutputfs
+= 2 then zwischen := eom[aa]; save zwischen, cat(eom_,aa,`.full.mpi`) end if 
+end do end proc;

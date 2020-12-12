@@ -1,0 +1,4 @@
+load_riemupdndndn := proc (CCredfull) local aa, bb, ii, jj; global 
+riemupdndndn; for aa to 4 do for bb to 4 do for ii to 4 do for jj to 4 do 
+riemupdndndn[aa,bb,ii,jj] := load_component(riemupdndndn,[aa, bb, ii, jj],
+CCredfull) end do end do end do end do; RETURN() end proc;

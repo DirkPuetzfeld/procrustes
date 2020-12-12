@@ -1,0 +1,7 @@
+calc_ud := proc (CCdisporder) local aa, zwischen, Oud, Pud; global ud; for aa
+to 4 do ud[aa] := add(gdd[aa,bb]*uu[bb],bb = 1 .. 4); Oud[aa] := subs(sublist,
+collect(expand(ud[aa]),1/c)); Pud[aa] := subs([seq(1/(c^ii) = 0,ii = 
+CCdisporder .. CCmaxorder)],collect(expand(Oud[aa]),1/c)); print(
+`Velocity dn[`,aa-1,`]`,subs(displist,Pud[aa])); if CCoutputfs = 2 then 
+zwischen := ud[aa]; save zwischen, cat(ud_,aa,`.full.mpi`) end if end do end 
+proc;

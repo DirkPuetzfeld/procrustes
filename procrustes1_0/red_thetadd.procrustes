@@ -1,0 +1,6 @@
+red_thetadd := proc (CCtruncorder) local ii, jj, TRUNCthetadd, zwischen; 
+global thetadd; for ii to 4 do for jj to 4 do TRUNCthetadd[ii,jj] := subs([seq
+(1/(c^ii) = 0,ii = CCtruncorder .. CCmaxorder)],collect(thetadd[ii,jj],1/c));
+thetadd[ii,jj] := TRUNCthetadd[ii,jj]; if CCoutputfs = 2 then zwischen := 
+TRUNCthetadd[ii,jj]; save zwischen, cat(thetadd_,ii,_,jj,`.red.mpi`) end if 
+end do end do end proc;

@@ -1,0 +1,9 @@
+calc_tupup := proc (CCdisporder) local aa, bb, zwischen, Otupup, Ptupup; 
+global tupup; for aa to 4 do for bb to 4 do tupup[aa,bb] := (c^2*rho(xx[1],xx[
+2],xx[3],xx[4])+rho(xx[1],xx[2],xx[3],xx[4])*iem(xx[1],xx[2],xx[3],xx[4])+pp(
+xx[1],xx[2],xx[3],xx[4]))*uu[aa]*uu[bb]-pp(xx[1],xx[2],xx[3],xx[4])*guu[aa,bb]
+; Otupup[aa,bb] := subs(sublist,collect(expand(tupup[aa,bb]),1/c)); Ptupup[aa,
+bb] := subs([seq(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(
+Otupup[aa,bb]),1/c)); print(`EM tensor (tupup)[`,aa-1,bb-1,`]`,subs(displist,
+Ptupup[aa,bb])); if CCoutputfs = 2 then zwischen := tupup[aa,bb]; save 
+zwischen, cat(tupup_,aa,_,bb,`.full.mpi`) end if end do end do end proc;

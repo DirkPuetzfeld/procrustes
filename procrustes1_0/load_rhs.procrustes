@@ -1,0 +1,3 @@
+load_rhs := proc (CCredfull) local aa, bb; global rhsfeqsdndn; for aa to 4 do
+for bb to 4 do rhsfeqsdndn[aa,bb] := load_component(rhsfeqsdndn,[aa, bb],
+CCredfull) end do end do; RETURN() end proc;

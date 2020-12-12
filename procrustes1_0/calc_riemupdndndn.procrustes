@@ -1,0 +1,12 @@
+calc_riemupdndndn := proc (CCdisporder) local ii, jj, aa, bb, zwischen, 
+Oriemupdndndn, Priemupdndndn; global riemupdndndn; for ii to 4 do for jj to 4
+do for aa to 4 do for bb to 4 do riemupdndndn[ii,jj,aa,bb] := -diff(conupdndn[
+ii,jj,aa],xx[bb])+diff(conupdndn[ii,jj,bb],xx[aa])-add(conupdndn[kk,jj,aa]*
+conupdndn[ii,kk,bb],kk = 1 .. 4)+add(conupdndn[kk,jj,bb]*conupdndn[ii,kk,aa],
+kk = 1 .. 4); Oriemupdndndn[ii,jj,aa,bb] := subs(sublist,collect(expand(
+riemupdndndn[ii,jj,aa,bb]),1/c)); Priemupdndndn[ii,jj,aa,bb] := subs([seq(1/(c
+^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Oriemupdndndn[ii,jj,
+aa,bb]),1/c)); print(`Riemann curvature (riemupdndndn)[`,ii-1,jj-1,aa-1,bb-1,
+`]`,subs(displist,Priemupdndndn[ii,jj,aa,bb])); if CCoutputfs = 2 then 
+zwischen := riemupdndndn[ii,jj,aa,bb]; save zwischen, cat(riemupdndndn_,ii,_,
+jj,_,aa,_,bb,`.full.mpi`) end if end do end do end do end do end proc;

@@ -1,0 +1,5 @@
+red_thetaupuppdn := proc (CCtruncorder) local aa, TRUNCthetaupuppdn, zwischen;
+global thetaupuppdn; for aa to 4 do TRUNCthetaupuppdn[aa] := subs([seq(1/(c^ii
+) = 0,ii = CCtruncorder .. CCmaxorder)],collect(thetaupuppdn[aa],1/c)); if 
+CCoutputfs = 2 then zwischen := TRUNCthetaupuppdn[aa]; save zwischen, cat(
+thetaupuppdn_,aa,`.red.mpi`) end if end do end proc;

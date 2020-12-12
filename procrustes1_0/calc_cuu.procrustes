@@ -1,0 +1,8 @@
+calc_cuu := proc (CCdisporder) local ii, jj, zwischen, Ocuu, Pcuu; global cuu;
+for ii to 4 do for jj to 4 do cuu[ii,jj] := diff(uu[ii],xx[jj])+add(conupdndn[
+ii,kk,jj]*uu[kk],kk = 1 .. 4); Ocuu[ii,jj] := subs(sublist,collect(expand(cuu[
+ii,jj]),1/c)); Pcuu[ii,jj] := subs([seq(1/(c^ii) = 0,ii = CCdisporder .. 
+CCmaxorder)],collect(expand(Ocuu[ii,jj]),1/c)); print(
+`Covariant derivative uu (cuu)[`,ii-1,jj-1,`]`,subs(displist,Pcuu[ii,jj])); if
+CCoutputfs = 2 then zwischen := cuu[ii,jj]; save zwischen, cat(cuu_,ii,_,jj,
+`.full.mpi`) end if end do end do end proc;

@@ -1,0 +1,9 @@
+calc_pn_gc := proc (CCdisporder) local aa, zwischen, Opn_gc, Ppn_gc; global 
+pn_gc; pn_gc[1] := add(diff(gdd[1,aa],xx[aa])-1/2*diff(gdd[aa,aa],xx[1]),aa =
+2 .. 4); for aa from 2 to 4 do pn_gc[aa] := add(diff(gdd[aa,bb],xx[bb]),bb = 2
+.. 4)-1/2*diff(add(gdd[bb,bb],bb = 2 .. 4)-gdd[1,1],xx[aa]) end do; for aa to
+4 do Opn_gc[aa] := subs(sublist,collect(expand(pn_gc[aa]),1/c)); Ppn_gc[aa] :=
+subs([seq(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Opn_gc[
+aa]),1/c)); print(`Standard PN gauge condition (pn_gc)[`,aa-1,`]`,subs(
+displist,Ppn_gc[aa])); if CCoutputfs = 2 then zwischen := pn_gc[aa]; save 
+zwischen, cat(pn_gc_,aa,`.full.mpi`) end if end do end proc;

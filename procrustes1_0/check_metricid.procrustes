@@ -1,0 +1,4 @@
+check_metricid := proc (CCdisporder) local DD, ii, jj, CC; DD := matrix(4,4);
+for ii to 4 do for jj to 4 do CC[ii,jj] := add(gdd[ii,kk]*guu[kk,jj],kk = 1 ..
+4); DD[ii,jj] := subs([seq(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],
+collect(expand(CC[ii,jj]),1/c)) end do end do; print(DD) end proc;

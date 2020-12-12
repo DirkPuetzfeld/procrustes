@@ -1,0 +1,6 @@
+red_ricupdn := proc (CCtruncorder) local aa, bb, TRUNCricupdn, zwischen; 
+global ricupdn; for aa to 4 do for bb to 4 do TRUNCricupdn[aa,bb] := subs([seq
+(1/(c^ii) = 0,ii = CCtruncorder .. CCmaxorder)],collect(ricupdn[aa,bb],1/c));
+ricupdn[aa,bb] := TRUNCricupdn[aa,bb]; if CCoutputfs = 2 then zwischen := 
+TRUNCricupdn[aa,bb]; save zwischen, cat(ricupdn_,aa,_,bb,`.red.mpi`) end if 
+end do end do end proc;

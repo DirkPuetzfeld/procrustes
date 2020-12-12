@@ -1,0 +1,2 @@
+load_eom := proc (CCredfull) local aa; global eom; for aa to 4 do eom[aa] := 
+load_component(eom,[aa],CCredfull) end do; RETURN() end proc;

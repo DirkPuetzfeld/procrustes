@@ -1,0 +1,8 @@
+calc_thetaupuppdn := proc (CCdisporder) local ii, zwischen, Othetaupuppdn, 
+Pthetaupuppdn; global thetaupuppdn; for ii to 4 do thetaupuppdn[ii] := add(
+diff(thetaupup[ii,jj],xx[jj]),jj = 1 .. 4); Othetaupuppdn[ii] := subs(sublist,
+collect(expand(thetaupuppdn[ii]),1/c)); Pthetaupuppdn[ii] := subs([seq(1/(c^ii
+) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Othetaupuppdn[ii]),1/c))
+; print(`Partial EM complex (thetaupuppdn)[`,ii-1,`]`,subs(displist,
+Pthetaupuppdn[ii])); if CCoutputfs = 2 then zwischen := thetaupuppdn[ii]; save
+zwischen, cat(thetaupuppdn_,ii,`.full.mpi`) end if end do end proc;

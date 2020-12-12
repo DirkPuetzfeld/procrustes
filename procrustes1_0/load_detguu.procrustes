@@ -1,0 +1,2 @@
+load_detguu := proc (CCredfull) global detguu; detguu := load_component(detguu
+,[],CCredfull); RETURN() end proc;

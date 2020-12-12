@@ -1,0 +1,6 @@
+red_omegadd := proc (CCtruncorder) local ii, jj, TRUNComegadd, zwischen; 
+global omegadd; for ii to 4 do for jj to 4 do TRUNComegadd[ii,jj] := subs([seq
+(1/(c^ii) = 0,ii = CCtruncorder .. CCmaxorder)],collect(omegadd[ii,jj],1/c));
+omegadd[ii,jj] := TRUNComegadd[ii,jj]; if CCoutputfs = 2 then zwischen := 
+TRUNComegadd[ii,jj]; save zwischen, cat(omegadd_,ii,_,jj,`.red.mpi`) end if 
+end do end do end proc;

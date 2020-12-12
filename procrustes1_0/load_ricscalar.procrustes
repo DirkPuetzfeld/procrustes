@@ -1,0 +1,2 @@
+load_ricscalar := proc (CCredfull) global ricscalar; ricscalar := 
+load_component(ricscalar,[],CCredfull); RETURN() end proc;

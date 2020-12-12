@@ -1,0 +1,8 @@
+red_weyldndndndn := proc (CCtruncorder) local ii, jj, aa, bb, 
+TRUNCweyldndndndn, zwischen; global weyldndndndn; for ii to 4 do for jj to 4 
+do for aa to 4 do for bb to 4 do TRUNCweyldndndndn[ii,jj,aa,bb] := subs([seq(1
+/(c^ii) = 0,ii = CCtruncorder .. CCmaxorder)],collect(weyldndndndn[ii,jj,aa,bb
+],1/c)); weyldndndndn[ii,jj,aa,bb] := TRUNCweyldndndndn[ii,jj,aa,bb]; if 
+CCoutputfs = 2 then zwischen := TRUNCweyldndndndn[ii,jj,aa,bb]; save zwischen,
+cat(weyldndndndn_,ii,_,jj,_,aa,_,bb,`.red.mpi`) end if end do end do end do 
+end do end proc;

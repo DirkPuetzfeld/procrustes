@@ -1,0 +1,3 @@
+fapprox := proc (xxx, nn, aa) options operator, arrow; 1/aa^(1/2)+add(1/mul(ii
+,ii = 1 .. mm)*subs(xxx = aa,diff(1/xxx^(1/2),seq(xxx,kk = 1 .. mm)))*(xxx-aa)
+^mm,mm = 1 .. nn) end proc;

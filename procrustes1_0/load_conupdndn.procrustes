@@ -1,0 +1,3 @@
+load_conupdndn := proc (CCredfull) local aa, bb, cc; global conupdndn; for aa
+to 4 do for bb to 4 do for cc to 4 do conupdndn[aa,bb,cc] := load_component(
+conupdndn,[aa, bb, cc],CCredfull) end do end do end do; RETURN() end proc;

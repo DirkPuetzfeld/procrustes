@@ -1,0 +1,9 @@
+calc_harm_gc := proc (CCdisporder) local aa, sq_detgdd, zwischen, Oharm_gc, 
+Pharm_gc; global harm_gc; sq_detgdd := subs(xxx = -detgdd,gapprox(xxx,CCtaylor
+,1)); for aa to 4 do harm_gc[aa] := add(diff(sq_detgdd*guu[aa,bb],xx[bb]),bb =
+1 .. 4) end do; for aa to 4 do Oharm_gc[aa] := subs(sublist,collect(expand(
+harm_gc[aa]),1/c)); Pharm_gc[aa] := subs([seq(1/(c^ii) = 0,ii = CCdisporder ..
+CCmaxorder)],collect(expand(Oharm_gc[aa]),1/c)); print(
+`Harmonic gauge condition (harm_gc)[`,aa-1,`]`,subs(displist,Pharm_gc[aa])); 
+if CCoutputfs = 2 then zwischen := harm_gc[aa]; save zwischen, cat(harm_gc_,aa
+,`.full.mpi`) end if end do end proc;

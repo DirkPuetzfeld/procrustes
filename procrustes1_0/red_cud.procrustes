@@ -1,0 +1,5 @@
+red_cud := proc (CCtruncorder) local ii, jj, zwischen, TRUNCcud; global cud; 
+for ii to 4 do for jj to 4 do TRUNCcud[ii,jj] := subs([seq(1/(c^ii) = 0,ii = 
+CCtruncorder .. CCmaxorder)],collect(cud[ii,jj],1/c)); cud[ii,jj] := TRUNCcud[
+ii,jj]; if CCoutputfs = 2 then zwischen := TRUNCcud[ii,jj]; save zwischen, cat
+(cud_,ii,_,jj,`.red.mpi`) end if end do end do end proc;

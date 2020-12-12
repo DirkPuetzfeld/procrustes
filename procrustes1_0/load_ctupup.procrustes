@@ -1,0 +1,3 @@
+load_ctupup := proc (CCredfull) local aa, bb, cc; global ctupup; for aa to 4 
+do for bb to 4 do for cc to 4 do ctupup[aa,bb,cc] := load_component(ctupup,[aa
+, bb, cc],CCredfull) end do end do end do; RETURN() end proc;

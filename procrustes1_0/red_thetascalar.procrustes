@@ -1,0 +1,5 @@
+red_thetascalar := proc (CCtruncorder) local zwischen, TRUNCtheta; global 
+thetascalar; TRUNCtheta := subs([seq(1/(c^ii) = 0,ii = CCtruncorder .. 
+CCmaxorder)],collect(thetascalar,1/c)); thetascalar := TRUNCtheta; if 
+CCoutputfs = 2 then zwischen := TRUNCtheta; save zwischen, cat(
+`thetascalar.red.mpi`) end if end proc;

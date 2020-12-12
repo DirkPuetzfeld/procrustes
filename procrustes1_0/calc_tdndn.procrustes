@@ -1,0 +1,9 @@
+calc_tdndn := proc (CCdisporder) local aa, bb, zwischen, Otdndn, Ptdndn; 
+global tdndn; for aa to 4 do for bb to 4 do tdndn[aa,bb] := (c^2*rho(xx[1],xx[
+2],xx[3],xx[4])+rho(xx[1],xx[2],xx[3],xx[4])*iem(xx[1],xx[2],xx[3],xx[4])+pp(
+xx[1],xx[2],xx[3],xx[4]))*ud[aa]*ud[bb]-pp(xx[1],xx[2],xx[3],xx[4])*gdd[aa,bb]
+; Otdndn[aa,bb] := subs(sublist,collect(expand(tdndn[aa,bb]),1/c)); Ptdndn[aa,
+bb] := subs([seq(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(
+Otdndn[aa,bb]),1/c)); print(`EM tensor (tdndn)[`,aa-1,bb-1,`]`,subs(displist,
+Ptdndn[aa,bb])); if CCoutputfs = 2 then zwischen := tdndn[aa,bb]; save 
+zwischen, cat(tdndn_,aa,_,bb,`.full.mpi`) end if end do end do end proc;

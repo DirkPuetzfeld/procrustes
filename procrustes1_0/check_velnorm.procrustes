@@ -1,0 +1,5 @@
+check_velnorm := proc (CCdisporder) local Ovelnorm, Pvelnorm; global velnorm;
+velnorm := add(uu[aa]*ud[aa],aa = 1 .. 4); Ovelnorm := subs(sublist,collect(
+expand(velnorm),1/c)); Pvelnorm := subs([seq(1/(c^ii) = 0,ii = CCdisporder ..
+CCmaxorder)],collect(expand(Ovelnorm),1/c)); print(`Velocity norm`,subs(
+displist,Pvelnorm)) end proc;

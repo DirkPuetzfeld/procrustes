@@ -1,0 +1,1192 @@
+{VERSION 5 0 "IBM INTEL NT" "5.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "" -1 256 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }
+{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Heading 1" 0 3 1 
+{CSTYLE "" -1 -1 "" 1 18 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }1 0 0 0 8 4 0 0 
+0 0 0 0 -1 0 }}
+{SECT 0 {EXCHG {PARA 0 "" 0 "" {TEXT 256 16 "PROCRUSTES v1.0 " }{TEXT 
+-1 1 "\n" }}{PARA 0 "" 0 "" {TEXT -1 14 "Dirk Puetzfeld" }}{PARA 0 "" 
+0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 29 "Last modification: 2
+006-04-06" }}{PARA 0 "" 0 "" {TEXT -1 67 "\nThis file countains the so
+urce for all the routines in the package" }}}{SECT 1 {PARA 3 "" 0 "" 
+{TEXT -1 19 "PROCRUSTES routines" }}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 8 "restart:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 587 "#------
+----------------------------------------------------------------------
+-------------------\n# Outputs current system status\n#---------------
+----------------------------------------------------------------------
+----------\nsystem_status:=proc()\n print('Memusage',evalf(kernelopts(
+bytesused)/1024/1024),'Mbyte');\n print('Alloc',evalf(kernelopts(bytes
+alloc)/1024/1024),'Mbyte');\n print('Datalimit',evalf(kernelopts(datal
+imit)/1024/1024),'Mbyte');\n print('Stacklimit',evalf(kernelopts(stack
+limit)/1024/1024),'Mbyte');\n print('Cputime',evalf(kernelopts(cputime
+)/60/60),'hours');\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 147 
+"Calculate the velocities---------------------------------------------
+----(automated calculation, be sure to select the desired accuracy in \+
+fapprox)" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 385 "#-------------
+----------------------------------------------------------------------
+------------\n# Taylor approximation for the automated velocity calcul
+ation\n#--------------------------------------------------------------
+---------------------------------\nfapprox:=(xxx,nn,aa)->aa^(-1/2)+add
+((1/(mul(ii,ii=1..mm)))*subs(xxx=aa,diff(xxx^(-1/2),seq(xxx,kk=1..mm))
+)*(xxx-aa)^mm,mm=1..nn):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+969 "#----------------------------------------------------------------
+-------------------------------\n# Calculate contravariant four veloci
+ty uu\n#\n# needs: fapprox, gdd, CCtaylor\n#\n#-----------------------
+----------------------------------------------------------------------
+--\ncalc_uu:=proc(CCdisporder)\nlocal aa,zwischen,vuu,Ouu,Puu:\nglobal
+ uu:\nuu[1]:=subs(xxx=(gdd[1,1]+2*add(gdd[1,ii]*vuu[ii]/c,ii=2..4)+add
+(add(gdd[ii,jj]*vuu[ii]*vuu[jj]/c^2,jj=2..4),ii=2..4)),fapprox(xxx,CCt
+aylor,1)):\nfor aa from 2 to 4 do uu[aa]:=uu[1]*vuu[aa]/c: od:\n vuu[2
+]:=vu01(x0,x1,x2,x3);vuu[3]:=vu02(x0,x1,x2,x3);vuu[4]:=vu03(x0,x1,x2,x
+3);\n  for aa from 1 to 4 do\n   Ouu[aa]:=subs(sublist,collect(expand(
+uu[aa]),1/c)):\n   Puu[aa]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxo
+rder)],collect(expand(Ouu[aa]),1/c))):\n   print(`Velocity up[`,aa-1,`
+]`,subs(displist,Puu[aa]));\n    if CCoutputfs=2 then\n     zwischen:=
+uu[aa]:  \n     save zwischen,cat(`uu_`,aa,`.full.mpi`); \n    fi;\n  \+
+ od;\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 572 "#------
+----------------------------------------------------------------------
+-------------------\n# Reduce contravariant four velocity uu\n#\n# nee
+ds: uu\n#\n#----------------------------------------------------------
+-------------------------------------\nred_uu:=proc(CCtruncorder)\nloc
+al aa,TRUNCuu,zwischen;\nglobal uu;\nfor aa from 1 to 4 do\n  TRUNCuu[
+aa]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(expand(
+uu[aa]),1/c))): \n  uu[aa]:=TRUNCuu[aa];\n  if CCoutputfs=2 then\n    \+
+zwischen:=TRUNCuu[aa]:  \n    save zwischen,cat(`uu_`,aa,`.red.mpi`);
+\n  fi;\nod;\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 427 
+"#--------------------------------------------------------------------
+---------------------------\n# Load contravariant four velocity uu\n#
+\n# needs: load_component, files with components \n#\n#---------------
+----------------------------------------------------------------------
+----------\nload_uu:=proc(CCredfull)\nlocal aa:\nglobal uu:\n for aa f
+rom 1 to 4 do \n   uu[aa]:=load_component(`uu`,[aa],CCredfull): \n od:
+\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 690 "
+#---------------------------------------------------------------------
+--------------------------\n# Calculate covariant four velocity ud\n#
+\n# needs: gdd,uu\n#\n#-----------------------------------------------
+------------------------------------------------\ncalc_ud:=proc(CCdisp
+order)\nlocal aa,zwischen,Oud,Pud:\nglobal ud:\nfor aa from 1 to 4 do \+
+ \n ud[aa]:=add(gdd[aa,bb]*uu[bb],bb=1..4):\n Oud[aa]:=subs(sublist,co
+llect(expand(ud[aa]),1/c)):\n Pud[aa]:=(subs([seq(1/c^ii=0,ii=CCdispor
+der..CCmaxorder)],collect(expand(Oud[aa]),1/c))):\n print(`Velocity dn
+[`,aa-1,`]`,subs(displist,Pud[aa]));\n if CCoutputfs=2 then\n   zwisch
+en:=ud[aa]:  \n   save zwischen,cat(`ud_`,aa,`.full.mpi`);\n fi:\nod:
+\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 557 "#----------
+----------------------------------------------------------------------
+---------------\n# Reduce four velocity ud\n#\n# needs: ud\n#\n#------
+----------------------------------------------------------------------
+-------------------\nred_ud:=proc(CCtruncorder)\nlocal TRUNCud,zwische
+n,aa;\nglobal ud;\nfor aa from 1 to 4 do\n TRUNCud[aa]:=(subs([seq(1/c
+^ii=0,ii=CCtruncorder..CCmaxorder)],collect(expand(ud[aa]),1/c))): \n \+
+ud[aa]:=TRUNCud[aa];\n  if CCtruncexp=2 then\n    zwischen:=TRUNCud[aa
+]:  \n    save zwischen,cat(`ud_`,aa,`.red.mpi`);\n  fi;\n od;\nend pr
+oc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 423 "#------------------
+----------------------------------------------------------------------
+-------\n# Load covariant four velocity ud\n#\n# needs: load_component
+, files with components \n#\n#----------------------------------------
+-------------------------------------------------------\nload_ud:=proc
+(CCredfull)\nlocal aa:\nglobal ud:\n for aa from 1 to 4 do \n   ud[aa]
+:=load_component(`ud`,[aa],CCredfull): \n od:\nRETURN():\nend proc;" }
+}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 75 "Check velocity norm  -----------
+-------------------------------------------" }}}{EXCHG {PARA 0 "> " 0 
+"" {MPLTEXT 1 0 554 "#------------------------------------------------
+-----------------------------------------------\n# Check velocity norm
+\n#\n# needs: uu,ud\n#\n#---------------------------------------------
+--------------------------------------------------\ncheck_velnorm:=pro
+c(CCdisporder)\nlocal Ovelnorm,Pvelnorm:\nglobal velnorm: \n velnorm:=
+add(uu[aa]*ud[aa],aa=1..4):\n Ovelnorm:=subs(sublist,collect(expand(ve
+lnorm),1/c)):\n Pvelnorm:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxord
+er)],collect(expand(Ovelnorm),1/c))):\n print(`Velocity norm`,subs(dis
+plist,Pvelnorm));\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 73 "C
+alculate EM tensor automatically--------------------------------------
+--" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 930 "#-------------------
+----------------------------------------------------------------------
+------\n# Calculate EM tensor upup\n#\n# needs: uu,guu\n#\n#----------
+----------------------------------------------------------------------
+--------------- \ncalc_tupup:=proc(CCdisporder)\nlocal aa,bb,zwischen,
+Otupup,Ptupup:\nglobal tupup:\nfor aa from 1 to 4 do\n for bb from 1 t
+o 4 do\n tupup[aa,bb]:=(c^2*rho(xx[1],xx[2],xx[3],xx[4])+rho(xx[1],xx[
+2],xx[3],xx[4])*iem(xx[1],xx[2],xx[3],xx[4])+pp(xx[1],xx[2],xx[3],xx[4
+]))*uu[aa]*uu[bb]-pp(xx[1],xx[2],xx[3],xx[4])*guu[aa,bb];\n Otupup[aa,
+bb]:=subs(sublist,collect(expand(tupup[aa,bb]),1/c)):\n Ptupup[aa,bb]:
+=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expand(Otupu
+p[aa,bb]),1/c))):\n print(`EM tensor (tupup)[`,aa-1,bb-1,`]`,subs(disp
+list,Ptupup[aa,bb]));\n  if CCoutputfs=2 then\n    zwischen:=tupup[aa,
+bb]:  \n    save zwischen,cat(`tupup_`,aa,`_`,bb,`.full.mpi`);\n  fi:
+\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 648 "
+#---------------------------------------------------------------------
+--------------------------\n# Reduce EM tensor tupup\n#\n# needs: tupu
+p\n#\n#---------------------------------------------------------------
+--------------------------------\nred_tupup:=proc(CCtruncorder)\nlocal
+ aa,bb,zwischen,TRUNCtupup;\nglobal tupup;\nfor aa from 1 to 4 do\n fo
+r bb from 1 to 4 do\n   TRUNCtupup[aa,bb]:=(subs([seq(1/c^ii=0,ii=CCtr
+uncorder..CCmaxorder)],collect(expand(tupup[aa,bb]),1/c))):\n   tupup[
+aa,bb]:=TRUNCtupup[aa,bb]:\n    if CCoutputfs=2 then\n    zwischen:=TR
+UNCtupup[aa,bb]:  \n    save zwischen,cat(`tupup_`,aa,`_`,bb,`.red.mpi
+`); \n    fi:\n  od:\nod: \nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 463 "#---------------------------------------------------
+--------------------------------------------\n# Load EM tensor tupup\n
+#\n# needs: load_component, files with components \n#\n#--------------
+----------------------------------------------------------------------
+-----------\nload_tupup:=proc(CCredfull)\nlocal aa,bb:\nglobal tupup:
+\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n   tupup[aa,bb]:=l
+oad_component(`tupup`,[aa,bb],CCredfull):\n  od: \n od:\nRETURN():\nen
+d proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 936 "#--------------
+----------------------------------------------------------------------
+-----------\n# Calculate EM tensor dndn\n#\n# needs: ud,gdd\n#\n#-----
+----------------------------------------------------------------------
+-------------------- \ncalc_tdndn:=proc(CCdisporder)\nlocal aa,bb,zwis
+chen,Otdndn,Ptdndn:\nglobal tdndn:\nfor aa from 1 to 4 do\n for bb fro
+m 1 to 4 do  \n  tdndn[aa,bb]:=(c^2*rho(xx[1],xx[2],xx[3],xx[4])+rho(x
+x[1],xx[2],xx[3],xx[4])*iem(xx[1],xx[2],xx[3],xx[4])+pp(xx[1],xx[2],xx
+[3],xx[4]))*ud[aa]*ud[bb]-pp(xx[1],xx[2],xx[3],xx[4])*gdd[aa,bb];\n  O
+tdndn[aa,bb]:=subs(sublist,collect(expand(tdndn[aa,bb]),1/c)):\n  Ptdn
+dn[aa,bb]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(ex
+pand(Otdndn[aa,bb]),1/c))):\n  print(`EM tensor (tdndn)[`,aa-1,bb-1,`]
+`,subs(displist,Ptdndn[aa,bb]));\n  if CCoutputfs=2 then\n    zwischen
+:=tdndn[aa,bb]:  \n    save zwischen,cat(`tdndn_`,aa,`_`,bb,`.full.mpi
+`);\n  fi:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 645 "#---------------------------------------------------
+--------------------------------------------\n# Reduce EM tensor tdndn
+\n#\n# needs: tdndn\n#\n#---------------------------------------------
+--------------------------------------------------\nred_tdndn:=proc(CC
+truncorder)\nlocal aa,bb,zwischen,TRUNCtdndn;\nglobal tdndn;\nfor aa f
+rom 1 to 4 do\n for bb from 1 to 4 do \n  TRUNCtdndn[aa,bb]:=(subs([se
+q(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(expand(tdndn[aa,bb]),
+1/c))):\n  tdndn[aa,bb]:=TRUNCtdndn[aa,bb]:\n   if CCoutputfs=2 then\n
+     zwischen:=TRUNCtdndn[aa,bb]:  \n     save zwischen,cat(`tdndn_`,a
+a,`_`,bb,`.red.mpi`); \n   fi:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 463 "#---------------------------------------
+--------------------------------------------------------\n# Load EM te
+nsor tdndn\n#\n# needs: load_component, files with components \n#\n#--
+----------------------------------------------------------------------
+-----------------------\nload_tdndn:=proc(CCredfull)\nlocal aa,bb:\ngl
+obal tdndn:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n   tdnd
+n[aa,bb]:=load_component(`tdndn`,[aa,bb],CCredfull):\n  od: \n od:\nRE
+TURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 811 "#---
+----------------------------------------------------------------------
+----------------------\n# Calculate mixed EM tensor updn\n# \n# needs:
+ gdd,tupup\n#\n#------------------------------------------------------
+----------------------------------------- \ncalc_tupdn:=proc(CCdispord
+er)\nlocal aa,bb,zwischen,Otupdn,Ptupdn:\nglobal tupdn:\nfor aa from 1
+ to 4 do\n for bb from 1 to 4 do  \n  tupdn[aa,bb]:=add(gdd[bb,ii]*tup
+up[aa,ii],ii=1..4);\n  Otupdn[aa,bb]:=subs(sublist,collect(expand(tupd
+n[aa,bb]),1/c)):\n  Ptupdn[aa,bb]:=(subs([seq(1/c^ii=0,ii=CCdisporder.
+.CCmaxorder)],collect(expand(Otupdn[aa,bb]),1/c))):\n  print(`EM tenso
+r (tupdn)[`,aa-1,bb-1,`]`,subs(displist,Ptupdn[aa,bb]));\n   if CCoutp
+utfs=2 then\n    zwischen:=tupdn[aa,bb]:  \n    save zwischen,cat(`tup
+dn_`,aa,`_`,bb,`.full.mpi`);\n   fi:\n od:\nod:\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 642 "#---------------------------------
+--------------------------------------------------------------\n# Redu
+ce EM tensor tupdn\n#\n# needs: tupdn\n#\n#---------------------------
+--------------------------------------------------------------------\n
+red_tupdn:=proc(CCtruncorder)\nlocal aa,bb,TRUNCtupdn,zwischen:\ngloba
+l tupdn:\nfor aa from 1 to 4 do\n for bb from 1 to 4 do\n  TRUNCtupdn[
+aa,bb]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(expa
+nd(tupdn[aa,bb]),1/c))):  \n  tupdn[aa,bb]:=TRUNCtupdn[aa,bb]:\n  if C
+Coutputfs=2 then\n    zwischen:=TRUNCtupdn[aa,bb]:  \n    save zwische
+n,cat(`tupdn_`,aa,`_`,bb,`.red.mpi`); \n  fi:\n od;\nod;\nend proc;" }
+}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 463 "#------------------------
+----------------------------------------------------------------------
+-\n# Load EM tensor tupdn\n#\n# needs: load_component, files with comp
+onents \n#\n#---------------------------------------------------------
+--------------------------------------\nload_tupdn:=proc(CCredfull)\nl
+ocal aa,bb:\nglobal tupdn:\n for aa from 1 to 4 do\n  for bb from 1 to
+ 4 do \n   tupdn[aa,bb]:=load_component(`tupdn`,[aa,bb],CCredfull):\n \+
+ od: \n od:\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 
+76 "RHS of the field equations----------------------------------------
+----------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 964 "#-----------
+----------------------------------------------------------------------
+--------------\n# Calculate RHS of the field equations dndn\n#\n# need
+s: tdndn,tupdn,gdd\n#\n# note: kappa = 8*pi*G\n#\n#-------------------
+----------------------------------------------------------------------
+------ \ncalc_rhs:=proc(CCdisporder)\nlocal aa,bb,zwischen,Prhsfeqsdnd
+n,Orhsfeqsdndn:\nglobal rhsfeqsdndn:\nfor aa from 1 to 4 do\n for bb f
+rom 1 to 4 do  \n  rhsfeqsdndn[aa,bb]:=-(kappa/c^4)*(tdndn[aa,bb]-(1/2
+)*add(tupdn[ii,ii],ii=1..4)*gdd[aa,bb]);\n  Orhsfeqsdndn[aa,bb]:=subs(
+sublist,collect(expand(rhsfeqsdndn[aa,bb]),1/c)):\n  Prhsfeqsdndn[aa,b
+b]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expand(Or
+hsfeqsdndn[aa,bb]),1/c))):\n  print(`RHS field equations (rhsfeqsdndn)
+[`,aa-1,bb-1,`]`,subs(displist,Prhsfeqsdndn[aa,bb]));\n  if CCoutputfs
+=2 then\n    zwischen:=rhsfeqsdndn[aa,bb]:  \n    save zwischen,cat(`r
+hsfeqsdndn_`,aa,`_`,bb,`.full.mpi`);\n  fi:\n od:\nod:\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 699 "#--------------------------
+---------------------------------------------------------------------
+\n# Reduce RHS of the field equations dndn\n#\n# needs: rhs\n#\n#-----
+----------------------------------------------------------------------
+--------------------\nred_rhs:=proc(CCtruncorder)\nlocal aa,bb,zwische
+n,TRUNCrhsfeqsdndn:\nglobal rhsfeqsdndn:\nfor aa from 1 to 4 do\n for \+
+bb from 1 to 4 do  \n TRUNCrhsfeqsdndn[aa,bb]:=(subs([seq(1/c^ii=0,ii=
+CCtruncorder..CCmaxorder)],collect(expand(rhsfeqsdndn[aa,bb]),1/c))):
+\n rhsfeqsdndn[aa,bb]:=TRUNCrhsfeqsdndn[aa,bb]:\n  if CCoutputfs=2 the
+n\n    zwischen:=TRUNCrhsfeqsdndn[aa,bb]:  \n    save zwischen,cat(`rh
+sfeqsdndn_`,aa,`_`,bb,`.red.mpi`); \n fi:\n od:\nod:\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 495 "#--------------------------
+---------------------------------------------------------------------
+\n# Load RHS of the field equations dndn\n#\n# needs: load_component, \+
+files with components \n#\n#------------------------------------------
+-----------------------------------------------------\nload_rhs:=proc(
+CCredfull)\nlocal aa,bb:\nglobal rhsfeqsdndn:\n for aa from 1 to 4 do
+\n  for bb from 1 to 4 do \n   rhsfeqsdndn[aa,bb]:=load_component(`rhs
+feqsdndn`,[aa,bb],CCredfull):\n  od: \n od:\nRETURN():\nend proc;" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 74 "Check metric identity condition---
+----------------------------------------" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 558 "#---------------------------------------------------
+--------------------------------------------\n# Check metric identity
+\n#\n# needs: gdd,guu\n#\n#-------------------------------------------
+----------------------------------------------------\ncheck_metricid:=
+proc(CCdisporder)\nlocal DD,ii,jj,CC;\nDD:=matrix(4,4): #only for nice
+r display\nfor ii from 1 to 4 do\n for jj from 1 to 4 do\n    CC[ii,jj
+]:=add(gdd[ii,kk]*guu[kk,jj],kk=1..4);\n    DD[ii,jj]:=(subs([seq(1/c^
+ii=0,ii=CCdisporder..CCmaxorder)],collect(expand(CC[ii,jj]),1/c))); \n
+  od;\nod;\nprint(DD);\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 
+92 "Connection--------------------------------------------------------
+--------------------------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+972 "#----------------------------------------------------------------
+-------------------------------\n# Calculate connection dndndn\n#\n# n
+eeds: gdd\n#\n#-------------------------------------------------------
+----------------------------------------\ncalc_condndndn:=proc(CCdispo
+rder)\nlocal cc,aa,bb,zwischen,Ocondndndn,Pcondndndn:\nglobal condndnd
+n:\nfor cc from 1 to 4 do\n for aa from 1 to 4 do\n  for bb from 1 to \+
+4 do\n    condndndn[cc,aa,bb]:=(1/2)*(diff(gdd[cc,aa],xx[bb])+diff(gdd
+[cc,bb],xx[aa])-diff(gdd[aa,bb],xx[cc])):\n    Ocondndndn[cc,aa,bb]:=s
+ubs(sublist,collect(expand(condndndn[cc,aa,bb]),1/c)):\n    Pcondndndn
+[cc,aa,bb]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(e
+xpand(Ocondndndn[cc,aa,bb]),1/c))):\n    print(`Connection (condndndn)
+[`,cc-1,aa-1,bb-1,`]`,subs(displist,Pcondndndn[cc,aa,bb]));\n    if CC
+outputfs=2 then\n     zwischen:=condndndn[cc,aa,bb]:  \n     save zwis
+chen,cat(`condndndn_`,cc,`_`,aa,`_`,bb,`.full.mpi`);\n    fi:\n  od:\n
+ od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 740 "#-
+----------------------------------------------------------------------
+------------------------\n# Reduce connection dndndn\n#\n# needs: cond
+ndndn\n#\n#-----------------------------------------------------------
+------------------------------------\nred_condndndn:=proc(CCtruncorder
+)\nlocal aa,bb,cc,zwischen,TRUNCcondndndn;\nglobal condndndn;\nfor cc \+
+from 1 to 4 do\n for aa from 1 to 4 do\n  for bb from 1 to 4 do\n   TR
+UNCcondndndn[cc,aa,bb]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorde
+r)],collect(expand(condndndn[cc,aa,bb]),1/c))):\n   condndndn[cc,aa,bb
+]:=TRUNCcondndndn[cc,aa,bb]:\n   if CCoutputfs=2 then\n    zwischen:=T
+RUNCcondndndn[cc,aa,bb]:  \n    save zwischen,cat(`condndndn_`,cc,`_`,
+aa,`_`,bb,`.red.mpi`);\n   fi:\n  od:\n od:\nod:\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 523 "#--------------------------
+---------------------------------------------------------------------
+\n# Load connection dndndn\n#\n# needs: load_component, files with com
+ponents \n#\n#--------------------------------------------------------
+---------------------------------------\nload_condndndn:=proc(CCredful
+l)\nlocal aa,bb,cc:\nglobal condndndn:\n for aa from 1 to 4 do\n  for \+
+bb from 1 to 4 do\n   for cc from 1 to 4 do \n    condndndn[aa,bb,cc]:
+=load_component(`condndndn`,[aa,bb,cc],CCredfull):\n   od:\n  od: \n o
+d:\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+1095 "#---------------------------------------------------------------
+--------------------------------\n# Calculate connection updndn\n#\n# \+
+needs: guu,gdd\n#\n#--------------------------------------------------
+---------------------------------------------\ncalc_conupdndn:=proc(CC
+disporder)\nlocal aa,bb,cc,zwischen,Oconupdndn,Pconupdndn:\nglobal con
+updndn:\nfor cc from 1 to 4 do\n for aa from 1 to 4 do\n  for bb from \+
+1 to 4 do\n    #alternative definition conupdndn[cc,aa,bb]:=(1/2)*add(
+guu[cc,kk]*(diff(gdd[kk,aa],xx[bb])+diff(gdd[kk,bb],xx[aa])-diff(gdd[a
+a,bb],xx[kk])),kk=1..4):\n    conupdndn[cc,aa,bb]:=add(guu[cc,kk]*cond
+ndndn[kk,aa,bb],kk=1..4);\n    Oconupdndn[cc,aa,bb]:=subs(sublist,coll
+ect(expand(conupdndn[cc,aa,bb]),1/c)):\n    Pconupdndn[cc,aa,bb]:=(sub
+s([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expand(Oconupdndn
+[cc,aa,bb]),1/c))):\n    print(`Connection (conupdndn)[`,cc-1,aa-1,bb-
+1,`]`,subs(displist,Pconupdndn[cc,aa,bb]));\n    if CCoutputfs=2 then
+\n     zwischen:=conupdndn[cc,aa,bb]:  \n     save zwischen,cat(`conup
+dndn_`,cc,`_`,aa,`_`,bb,`.full.mpi`);\n    fi; \n  od:\n od:\nod:\nend
+ proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 748 "#---------------
+----------------------------------------------------------------------
+----------\n# Reduce connection updndn\n#\n# needs: conupdndn\n#\n#---
+----------------------------------------------------------------------
+----------------------\nred_conupdndn:=proc(CCtruncorder)\nlocal aa,bb
+,cc,zwischen,TRUNCconupdndn:\nglobal conupdndn:\nfor cc from 1 to 4 do
+\n for aa from 1 to 4 do\n  for bb from 1 to 4 do\n    TRUNCconupdndn[
+cc,aa,bb]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(e
+xpand(conupdndn[cc,aa,bb]),1/c))):\n    conupdndn[cc,aa,bb]:=TRUNCconu
+pdndn[cc,aa,bb]:\n    if CCoutputfs=2 then\n     zwischen:=TRUNCconupd
+ndn[cc,aa,bb]:  \n     save zwischen,cat(`conupdndn_`,cc,`_`,aa,`_`,bb
+,`.red.mpi`);\n    fi;  \n  od:\n od:\nod:\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 523 "#---------------------------------
+--------------------------------------------------------------\n# Load
+ connection updndn\n#\n# needs: load_component, files with components \+
+\n#\n#----------------------------------------------------------------
+-------------------------------\nload_conupdndn:=proc(CCredfull)\nloca
+l aa,bb,cc:\nglobal conupdndn:\n for aa from 1 to 4 do\n  for bb from \+
+1 to 4 do\n   for cc from 1 to 4 do \n    conupdndn[aa,bb,cc]:=load_co
+mponent(`conupdndn`,[aa,bb,cc],CCredfull):\n   od:\n  od: \n od:\nRETU
+RN():\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 90 "Equations of \+
+motion----------------------------------------------------------------
+-------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 990 "#--------------
+----------------------------------------------------------------------
+-----------\n# Covariant derivative EMT\n#\n# needs: tupup,conupdndn\n
+#\n#------------------------------------------------------------------
+-----------------------------\ncalc_ctupup:=proc(CCdisporder)\nlocal a
+a,bb,cc,zwischen,Octupup,Pctupup:\nglobal ctupup:\nfor aa from 1 to 4 \+
+do\n for bb from 1 to 4 do\n  for cc from 1 to 4 do\n   ctupup[aa,bb,c
+c]:=diff(tupup[aa,bb],xx[cc])+add(conupdndn[aa,dd,cc]*tupup[dd,bb],dd=
+1..4)+add(conupdndn[bb,dd,cc]*tupup[aa,dd],dd=1..4):\n   Octupup[aa,bb
+,cc]:=subs(sublist,collect(expand(ctupup[aa,bb,cc]),1/c)):\n   Pctupup
+[aa,bb,cc]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(e
+xpand(Octupup[aa,bb,cc]),1/c))):\n   print(`Covariant derivative EMT (
+ctupup)[`,aa-1,bb-1,cc-1,`]`,subs(displist,Pctupup[aa,bb,cc]));\n    i
+f CCoutputfs=2 then\n     zwischen:=ctupup[aa,bb,cc]:  \n     save zwi
+schen,cat(`ctupup_`,aa,`_`,bb,`_`,cc,`.full.mpi`);\n    fi:\n  od:\n o
+d:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 679 "#---
+----------------------------------------------------------------------
+----------------------\n# Reduce covariant derivative of the EMT\n#\n#
+ needs: ctupup\n#\n#--------------------------------------------------
+---------------------------------------------\nred_ctupup:=proc(CCtrun
+corder)\nlocal aa,bb,cc,TRUNCctupup,zwischen;\nglobal ctupup;\nfor aa \+
+from 1 to 4 do\n for bb from 1 to 4 do\n  for cc from 1 to 4 do\n   TR
+UNCctupup[aa,bb,cc]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)]
+,collect(ctupup[aa,bb,cc],1/c))):    \n   if CCoutputfs=2 then\n     z
+wischen:=TRUNCctupup[aa,bb,cc]:  \n     save zwischen,cat(`ctupup_`,aa
+,`_`,bb,`_`,cc,`.red.mpi`); \n   fi:\n  od:\n od:\nod:\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 521 "#--------------------------
+---------------------------------------------------------------------
+\n# Load covariant derivative of EMT\n#\n# needs: load_component, file
+s with components \n#\n#----------------------------------------------
+-------------------------------------------------\nload_ctupup:=proc(C
+Credfull)\nlocal aa,bb,cc:\nglobal ctupup:\n for aa from 1 to 4 do\n  \+
+for bb from 1 to 4 do\n   for cc from 1 to 4 do \n    ctupup[aa,bb,cc]
+:=load_component(`ctupup`,[aa,bb,cc],CCredfull):\n   od:\n  od: \n od:
+\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 708 "
+#---------------------------------------------------------------------
+--------------------------\n# Calculate equations of motion\n#\n# need
+s: ctupup\n#\n#-------------------------------------------------------
+---------------------------------------- \ncalc_eom:=proc(CCdisporder)
+\nlocal aa,zwischen,Oeom,Peom:\nglobal eom:\nfor aa from 1 to 4 do\n e
+om[aa]:=add(ctupup[aa,bb,bb],bb=1..4):\n Oeom[aa]:=subs(sublist,collec
+t(expand(eom[aa]),1/c)):\n Peom[aa]:=(subs([seq(1/c^ii=0,ii=CCdisporde
+r..CCmaxorder)],collect(expand(Oeom[aa]),1/c))):\n print(`Equations of
+ motion (eom)[`,aa-1,`]`,subs(displist,Peom[aa]));\n if CCoutputfs=2 t
+hen\n   zwischen:=eom[aa]:  \n   save zwischen,cat(`eom_`,aa,`.full.mp
+i`);\n fi;\nod:\nend proc; " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+562 "#----------------------------------------------------------------
+-------------------------------\n# Reduce equations of motion\n#\n# ne
+eds: eom\n#\n#--------------------------------------------------------
+---------------------------------------\nred_eom:=proc(CCtruncorder)\n
+local aa,TRUNCeom,zwischen;\nglobal eom;\nfor aa from 1 to 4 do\n  TRU
+NCeom[aa]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(e
+om[aa],1/c))):\n  eom[aa]:=TRUNCeom[aa]:\n  if CCoutputfs=2 then\n   z
+wischen:=TRUNCeom[aa]:  \n   save zwischen,cat(`eom_`,aa,`.red.mpi`);
+\n  fi; \n od:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+418 "#----------------------------------------------------------------
+-------------------------------\n# Load equations of motion\n#\n# need
+s: load_component, files with components \n#\n#-----------------------
+----------------------------------------------------------------------
+--\nload_eom:=proc(CCredfull)\nlocal aa:\nglobal eom:\n for aa from 1 \+
+to 4 do\n   eom[aa]:=load_component(`eom`,[aa],CCredfull):\n od:\nRETU
+RN():\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 91 "Curvature----
+----------------------------------------------------------------------
+--------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 1111 "#------------
+----------------------------------------------------------------------
+-------------\n# Calculate Ricci dndn\n#\n# needs: guu,gdd,condndndn\n
+#\n#------------------------------------------------------------------
+-----------------------------\ncalc_ricdndn:=proc(CCdisporder)\nlocal \+
+ii,jj,zwischen,Oricdndn,Pricdndn:\nglobal ricdndn:\nfor ii from 1 to 4
+ do\n for jj from 1 to 4 do\nricdndn[ii,jj]:=(1/2)*add(add(guu[aa,bb]*
+(diff(gdd[ii,jj],xx[aa],xx[bb])+diff(gdd[aa,bb],xx[ii],xx[jj])-diff(gd
+d[aa,jj],xx[ii],xx[bb])-diff(gdd[ii,bb],xx[aa],xx[jj])),aa=1..4),bb=1.
+.4)+add(add(add(add(guu[aa,bb]*guu[dd,ee]*(condndndn[ee,ii,jj]*condndn
+dn[dd,aa,bb]-condndndn[dd,ii,bb]*condndndn[ee,aa,jj]),aa=1..4),bb=1..4
+),dd=1..4),ee=1..4);\n  Oricdndn[ii,jj]:=subs(sublist,collect(expand(r
+icdndn[ii,jj]),1/c)):\n  Pricdndn[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCdis
+porder..CCmaxorder)],collect(expand(Oricdndn[ii,jj]),1/c))):\n  print(
+`Ricci (ricdndn)[`,ii-1,jj-1,`]`,subs(displist,Pricdndn[ii,jj]));\n  i
+f CCoutputfs=2 then\n    zwischen:=ricdndn[ii,jj]:  \n    save zwische
+n,cat(`ricdndn_`,ii,`_`,jj,`.full.mpi`);\n  fi:\n od;\nod;\nend proc;
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 647 "#---------------------
+----------------------------------------------------------------------
+----\n# Reduce Ricci dndn\n#\n# needs: ricdndn\n#\n#------------------
+----------------------------------------------------------------------
+-------\nred_ricdndn:=proc(CCtruncorder)\nlocal aa,bb,TRUNCricdndn,zwi
+schen;\nglobal ricdndn;\nfor aa from 1 to 4 do\n for bb from 1 to 4 do
+\n  TRUNCricdndn[aa,bb]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxord
+er)],collect(ricdndn[aa,bb],1/c))):\n  ricdndn[aa,bb]:=TRUNCricdndn[aa
+,bb]:\n  if CCoutputfs=2 then\n    zwischen:=TRUNCricdndn[aa,bb]:  \n \+
+   save zwischen,cat(`ricdndn_`,aa,`_`,bb,`.red.mpi`); \n  fi:\n od:\n
+od:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 466 "#-------
+----------------------------------------------------------------------
+------------------\n# Load Ricci dndn\n#\n# needs: load_component, fil
+es with components \n#\n#---------------------------------------------
+--------------------------------------------------\nload_ricdndn:=proc
+(CCredfull)\nlocal aa,bb:\nglobal ricdndn:\n for aa from 1 to 4 do\n  \+
+for bb from 1 to 4 do \n   ricdndn[aa,bb]:=load_component(`ricdndn`,[a
+a,bb],CCredfull):\n  od: \n od:\nRETURN():\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 821 "#---------------------------------
+--------------------------------------------------------------\n# Calc
+ulate Ricci updn\n#\n# needs: guu,ricdndn\n#\n#-----------------------
+----------------------------------------------------------------------
+--\ncalc_ricupdn:=proc(CCdisporder)\nlocal ii,jj,zwischen,Oricupdn,Pri
+cupdn:\nglobal ricupdn:\nfor ii from 1 to 4 do\n for jj from 1 to 4 do
+\n  ricupdn[ii,jj]:=add(guu[ii,aa]*ricdndn[aa,jj],aa=1..4);\n  Oricupd
+n[ii,jj]:=subs(sublist,collect(expand(ricupdn[ii,jj]),1/c)):\n  Pricup
+dn[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(ex
+pand(Oricupdn[ii,jj]),1/c))):\n  print(`Ricci (ricupdn)[`,ii-1,jj-1,`]
+`,subs(displist,Pricupdn[ii,jj]));\n  if CCoutputfs=2 then\n    zwisch
+en:=ricupdn[ii,jj]:  \n    save zwischen,cat(`ricupdn_`,ii,`_`,jj,`.fu
+ll.mpi`);\n  fi:\n od;\nod;\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 655 "#---------------------------------------------------
+--------------------------------------------\n# Reduce Ricci updn\n#\n
+# needs: ricupdn\n#\n#------------------------------------------------
+-----------------------------------------------\nred_ricupdn:=proc(CCt
+runcorder)\nlocal aa,bb,TRUNCricupdn,zwischen:\nglobal ricupdn:\n for \+
+aa from 1 to 4 do\n  for bb from 1 to 4 do\n   TRUNCricupdn[aa,bb]:=(s
+ubs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(ricupdn[aa,bb]
+,1/c))):\n   ricupdn[aa,bb]:=TRUNCricupdn[aa,bb]:\n   if CCoutputfs=2 \+
+then\n    zwischen:=TRUNCricupdn[aa,bb]:  \n    save zwischen,cat(`ric
+updn_`,aa,`_`,bb,`.red.mpi`); \n   fi:\n  od:\n od:\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 466 "#--------------------------
+---------------------------------------------------------------------
+\n# Load Ricci updn\n#\n# needs: load_component, files with components
+ \n#\n#---------------------------------------------------------------
+--------------------------------\nload_ricupdn:=proc(CCredfull)\nlocal
+ aa,bb:\nglobal ricupdn:\n for aa from 1 to 4 do\n  for bb from 1 to 4
+ do \n   ricupdn[aa,bb]:=load_component(`ricupdn`,[aa,bb],CCredfull):
+\n  od: \n od:\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 699 "#---------------------------------------------------
+--------------------------------------------\n# Calculate Ricci scalar
+\n#\n# needs: ricupdn\n#\n#-------------------------------------------
+----------------------------------------------------\ncalc_ricscalar:=
+proc(CCdisporder)\nlocal zwischen,Oricscalar,Pricscalar:\nglobal ricsc
+alar:\n ricscalar:=add(ricupdn[aa,aa],aa=1..4):\n Oricscalar:=subs(sub
+list,collect(expand(ricscalar),1/c)):\n Pricscalar:=(subs([seq(1/c^ii=
+0,ii=CCdisporder..CCmaxorder)],collect(expand(Oricscalar),1/c))):\n pr
+int(`Ricci scalar (ricscalar)`,subs(displist,Pricscalar));\n  if CCout
+putfs=2 then\n    zwischen:=ricscalar:  \n    save zwischen,cat(`ricsc
+alar.full.mpi`);\n  fi:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 556 "#---------------------------------------------------
+--------------------------------------------\n# Reduce Ricci scalar\n#
+\n# needs: ricscalar\n#\n#--------------------------------------------
+---------------------------------------------------\nred_ricscalar:=pr
+oc(CCtruncorder)\nlocal TRUNCricscalar,zwischen:\nglobal ricscalar:\n \+
+TRUNCricscalar:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],coll
+ect(ricscalar,1/c))):\n ricscalar:=TRUNCricscalar:\n if CCoutputfs=2 t
+hen\n    zwischen:=TRUNCricscalar:  \n    save zwischen,cat(`ricscalar
+.red.mpi`); \n fi:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 392 "#--------------------------------------------------------------
+---------------------------------\n# Load Ricci scalar\n#\n# needs: lo
+ad_component, files with components \n#\n#----------------------------
+-------------------------------------------------------------------\nl
+oad_ricscalar:=proc(CCredfull)\nglobal ricscalar: \n   ricscalar:=load
+_component(`ricscalar`,[],CCredfull):\nRETURN():\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 1190 "#-------------------------
+----------------------------------------------------------------------
+\n# Calculate Riemann curvature updndndn\n#\n# needs: conupdndn\n#\n#-
+----------------------------------------------------------------------
+------------------------\ncalc_riemupdndndn:=proc(CCdisporder)\nlocal \+
+ii,jj,aa,bb,zwischen,Oriemupdndndn,Priemupdndndn:\nglobal riemupdndndn
+:\nfor ii from 1 to 4 do\n for jj from 1 to 4 do\n  for aa from 1 to 4
+ do\n   for bb from 1 to 4 do    riemupdndndn[ii,jj,aa,bb]:=-diff(conu
+pdndn[ii,jj,aa],xx[bb])+diff(conupdndn[ii,jj,bb],xx[aa])-add(conupdndn
+[kk,jj,aa]*conupdndn[ii,kk,bb],kk=1..4)+add(conupdndn[kk,jj,bb]*conupd
+ndn[ii,kk,aa],kk=1..4):\n   Oriemupdndndn[ii,jj,aa,bb]:=subs(sublist,c
+ollect(expand(riemupdndndn[ii,jj,aa,bb]),1/c)):\n   Priemupdndndn[ii,j
+j,aa,bb]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(exp
+and(Oriemupdndndn[ii,jj,aa,bb]),1/c))):\n   print(`Riemann curvature (
+riemupdndndn)[`,ii-1,jj-1,aa-1,bb-1,`]`,subs(displist,Priemupdndndn[ii
+,jj,aa,bb]));\n    if CCoutputfs=2 then\n     zwischen:=riemupdndndn[i
+i,jj,aa,bb]:  \n     save zwischen,cat(`riemupdndndn_`,ii,`_`,jj,`_`,a
+a,`_`,bb,`.full.mpi`);\n    fi:\n   od:\n  od:\n od:\nod:\nend proc;" 
+}}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 844 "#-----------------------
+----------------------------------------------------------------------
+--\n# Reduce Riemann curvature riemupdndndn\n#\n# needs: riemupdndndn
+\n#\n#----------------------------------------------------------------
+-------------------------------\nred_riemupdndndn:=proc(CCtruncorder)
+\nlocal ii,jj,aa,bb,TRUNCriemupdndndn,zwischen:\nglobal riemupdndndn: \+
+\nfor ii from 1 to 4 do\n for jj from 1 to 4 do\n  for aa from 1 to 4 \+
+do\n   for bb from 1 to 4 do    \n    TRUNCriemupdndndn[ii,jj,aa,bb]:=
+(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(riemupdndndn
+[ii,jj,aa,bb],1/c))):\n    riemupdndndn[ii,jj,aa,bb]:=TRUNCriemupdndnd
+n[ii,jj,aa,bb]:\n    if CCoutputfs=2 then\n     zwischen:=TRUNCriemupd
+ndndn[ii,jj,aa,bb]:  \n     save zwischen,cat(`riemupdndndn_`,ii,`_`,j
+j,`_`,aa,`_`,bb,`.red.mpi`); \n    fi:\n   od:\n  od:\n od:\nod:\nend \+
+proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 592 "#----------------
+----------------------------------------------------------------------
+---------\n# Load Riemann curvature riemupdndndn\n#\n# needs: load_com
+ponent, files with components \n#\n#----------------------------------
+-------------------------------------------------------------\nload_ri
+emupdndndn:=proc(CCredfull)\nlocal aa,bb,ii,jj:\nglobal riemupdndndn:
+\n for aa from 1 to 4 do\n  for bb from 1 to 4 do\n   for ii from 1 to
+ 4 do\n    for jj from 1 to 4 do \n     riemupdndndn[aa,bb,ii,jj]:=loa
+d_component(`riemupdndndn`,[aa,bb,ii,jj],CCredfull):\n    od: \n   od:
+\n  od:\n od:\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 1078 "#--------------------------------------------------
+---------------------------------------------\n# Calculate Riemann cur
+vature dndndndn\n#\n# needs: gdd,riemupdndndn\n#\n#-------------------
+----------------------------------------------------------------------
+------\ncalc_riemdndndndn:=proc(CCdisporder)\nlocal ii,jj,aa,bb,zwisch
+en,Oriemdndndndn,Priemdndndndn:\nglobal riemdndndndn:\nfor ii from 1 t
+o 4 do\n for jj from 1 to 4 do\n  for aa from 1 to 4 do\n   for bb fro
+m 1 to 4 do    \n   riemdndndndn[ii,jj,aa,bb]:=add(riemupdndndn[kk,jj,
+aa,bb]*gdd[kk,ii],kk=1..4):\n   Oriemdndndndn[ii,jj,aa,bb]:=subs(subli
+st,collect(expand(riemdndndndn[ii,jj,aa,bb]),1/c)):\n   Priemdndndndn[
+ii,jj,aa,bb]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect
+(expand(Oriemdndndndn[ii,jj,aa,bb]),1/c))):\n   print(`Riemann curvatu
+re (riemdndndndn)[`,ii-1,jj-1,aa-1,bb-1,`]`,subs(displist,Priemdndndnd
+n[ii,jj,aa,bb]));\n    if CCoutputfs=2 then\n     zwischen:=riemdndndn
+dn[ii,jj,aa,bb]:  \n     save zwischen,cat(`riemdndndndn_`,ii,`_`,jj,`
+_`,aa,`_`,bb,`.full.mpi`);\n    fi:\n   od:\n  od:\n od:\nod:\nend pro
+c;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 844 "#-------------------
+----------------------------------------------------------------------
+------\n# Reduce Riemann curvature riemdndndndn\n#\n# needs: riemdndnd
+ndn\n#\n#-------------------------------------------------------------
+----------------------------------\nred_riemdndndndn:=proc(CCtruncorde
+r)\nlocal ii,jj,aa,bb,TRUNCriemdndndndn,zwischen:\nglobal riemdndndndn
+: \nfor ii from 1 to 4 do\n for jj from 1 to 4 do\n  for aa from 1 to \+
+4 do\n   for bb from 1 to 4 do    \n    TRUNCriemdndndndn[ii,jj,aa,bb]
+:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(riemdndndn
+dn[ii,jj,aa,bb],1/c))):\n    riemdndndndn[ii,jj,aa,bb]:=TRUNCriemdndnd
+ndn[ii,jj,aa,bb]:\n    if CCoutputfs=2 then\n     zwischen:=TRUNCriemd
+ndndndn[ii,jj,aa,bb]:  \n     save zwischen,cat(`riemdndndndn_`,ii,`_`
+,jj,`_`,aa,`_`,bb,`.red.mpi`); \n    fi:\n   od:\n  od:\n od:\nod:\nen
+d proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 592 "#--------------
+----------------------------------------------------------------------
+-----------\n# Load Riemann curvature riemdndndndn\n#\n# needs: load_c
+omponent, files with components \n#\n#--------------------------------
+---------------------------------------------------------------\nload_
+riemdndndndn:=proc(CCredfull)\nlocal aa,bb,ii,jj:\nglobal riemdndndndn
+:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do\n   for ii from 1 t
+o 4 do\n    for jj from 1 to 4 do \n     riemdndndndn[aa,bb,ii,jj]:=lo
+ad_component(`riemdndndndn`,[aa,bb,ii,jj],CCredfull):\n    od: \n   od
+:\n  od:\n od:\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 1471 "#--------------------------------------------------
+---------------------------------------------\n# Calculate Weyl curvat
+ure\n#\n# needs: ricdndn,ricscalar,gdd,riemdndndndn\n#\n#-------------
+----------------------------------------------------------------------
+------------\ncalc_weyldndndndn:=proc(CCdisporder)\nlocal ii,jj,aa,bb,
+zwischen,Oweyldndndndn,Pweyldndndndn:\nglobal weyldndndndn:\nfor ii fr
+om 1 to 4 do\n for jj from 1 to 4 do\n  for aa from 1 to 4 do\n   for \+
+bb from 1 to 4 do    \n    weyldndndndn[ii,jj,aa,bb]:=riemdndndndn[ii,
+jj,aa,bb]\n                              -(1/2)*(gdd[ii,bb] * (ricdndn
+[jj,aa]-(1/4)*gdd[jj,aa]*ricscalar) + gdd[jj,aa] * (ricdndn[ii,bb]-(1/
+4)*gdd[ii,bb]*ricscalar) \n                                    - gdd[i
+i,aa] * (ricdndn[jj,bb]-(1/4)*gdd[jj,bb]*ricscalar) - gdd[jj,bb] * (ri
+cdndn[ii,aa]-(1/4)*gdd[ii,aa]*ricscalar))\n                           \+
+   -(1/12) * ricscalar * (gdd[ii,bb]*gdd[jj,aa] - gdd[ii,aa]*gdd[jj,bb
+]):\n    Oweyldndndndn[ii,jj,aa,bb]:=subs(sublist,collect(expand(weyld
+ndndndn[ii,jj,aa,bb]),1/c)):\n    Pweyldndndndn[ii,jj,aa,bb]:=(subs([s
+eq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expand(Oweyldndndndn[
+ii,jj,aa,bb]),1/c))):\n    print(`Weyl curvature (weyldndndndn)[`,ii-1
+,jj-1,aa-1,bb-1,`]`,subs(displist,Pweyldndndndn[ii,jj,aa,bb]));\n    i
+f CCoutputfs=2 then\n     zwischen:=weyldndndndn[ii,jj,aa,bb]:  \n    \+
+ save zwischen,cat(`weyldndndndn_`,ii,`_`,jj,`_`,aa,`_`,bb,`.full.mpi`
+);\n    fi:\n   od:\n  od:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 ">
+ " 0 "" {MPLTEXT 1 0 828 "#-------------------------------------------
+----------------------------------------------------\n# Reduce Weyl cu
+rvature\n#\n# needs: weyldndndndn\n#\n#-------------------------------
+----------------------------------------------------------------\nred_
+weyldndndndn:=proc(CCtruncorder)\nlocal ii,jj,aa,bb,TRUNCweyldndndndn,
+zwischen:\nglobal weyldndndndn: \nfor ii from 1 to 4 do\n for jj from \+
+1 to 4 do\n  for aa from 1 to 4 do\n   for bb from 1 to 4 do    \n    \+
+TRUNCweyldndndndn[ii,jj,aa,bb]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..C
+Cmaxorder)],collect(weyldndndndn[ii,jj,aa,bb],1/c))):\n    weyldndndnd
+n[ii,jj,aa,bb]:=TRUNCweyldndndndn[ii,jj,aa,bb]:\n    if CCoutputfs=2 t
+hen\n     zwischen:=TRUNCweyldndndndn[ii,jj,aa,bb]:  \n     save zwisc
+hen,cat(`weyldndndndn_`,ii,`_`,jj,`_`,aa,`_`,bb,`.red.mpi`); \n    fi:
+\n   od:\n  od:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 589 "#---------------------------------------------------
+--------------------------------------------\n# Load Weyl curvature we
+yldndndndn\n#\n# needs: load_component, files with components \n#\n#--
+----------------------------------------------------------------------
+-----------------------\nload_weyldndndndn:=proc(CCredfull)\nlocal aa,
+bb,ii,jj:\nglobal weyldndndndn:\n for aa from 1 to 4 do\n  for bb from
+ 1 to 4 do\n   for ii from 1 to 4 do\n    for jj from 1 to 4 do \n    \+
+ weyldndndndn[aa,bb,ii,jj]:=load_component(`weyldndndndn`,[aa,bb,ii,jj
+],CCredfull):\n    od: \n   od:\n  od:\n od:\nRETURN():\nend proc;" }}
+}{EXCHG {PARA 0 "" 0 "" {TEXT -1 70 "Determinant of the metric--------
+-------------------------------------" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 1474 "#--------------------------------------------------
+---------------------------------------------\n# Calculate determinant
+ of the metric guu (development frist column after Laplace)\n#\n# need
+s: guu\n#\n#----------------------------------------------------------
+-------------------------------------\ncalc_detguu:=proc(CCdisporder)
+\nlocal zwischen,Odetguu,Pdetguu:\nglobal detguu:\ndetguu:=guu[1,1]*(g
+uu[2,2]*guu[3,3]*guu[4,4]+guu[2,3]*guu[3,4]*guu[4,2]+guu[2,4]*guu[3,2]
+*guu[4,4]\n                 -guu[4,2]*guu[3,3]*guu[2,4]-guu[4,3]*guu[3
+,4]*guu[2,2]-guu[4,4]*guu[3,2]*guu[2,3])\n       -guu[2,1]*(guu[1,2]*g
+uu[3,3]*guu[4,4]+guu[1,3]*guu[3,4]*guu[4,2]+guu[1,4]*guu[3,2]*guu[4,3]
+\n                 -guu[4,2]*guu[3,3]*guu[1,4]-guu[4,3]*guu[3,4]*guu[1
+,2]-guu[4,4]*guu[3,2]*guu[1,3])\n       +guu[3,1]*(guu[1,2]*guu[2,3]*g
+uu[4,4]+guu[1,3]*guu[2,4]*guu[4,2]+guu[1,4]*guu[2,2]*guu[4,3]\n       \+
+          -guu[4,2]*guu[2,3]*guu[1,4]-guu[4,3]*guu[2,4]*guu[1,2]-guu[4
+,4]*guu[2,2]*guu[1,3])\n       -guu[4,1]*(guu[1,2]*guu[2,3]*guu[3,4]+g
+uu[1,3]*guu[2,4]*guu[3,2]+guu[1,4]*guu[2,2]*guu[3,3]\n                \+
+ -guu[3,2]*guu[2,3]*guu[1,4]-guu[3,3]*guu[2,4]*guu[1,2]-guu[3,4]*guu[2
+,2]*guu[1,3]):\nOdetguu:=subs(sublist,collect(expand(detguu),1/c)):\nP
+detguu:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expan
+d(Odetguu),1/c))):\nprint(`Determinant guu (detguu)`,subs(displist,Pde
+tguu));\n  if CCoutputfs=2 then\n    zwischen:=detguu:  \n    save zwi
+schen,cat(`detguu.full.mpi`); \n  fi:\nend proc;" }}}{EXCHG {PARA 0 ">
+ " 0 "" {MPLTEXT 1 0 534 "#-------------------------------------------
+----------------------------------------------------\n# Reduce determi
+nant detguu\n#\n# needs: detguu\n#\n#---------------------------------
+--------------------------------------------------------------\nred_de
+tguu:=proc(CCtruncorder)\nlocal TRUNCdetguu,zwischen:\nglobal detguu:
+\n TRUNCdetguu:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],coll
+ect(detguu,1/c))):\n detguu:=TRUNCdetguu:\n  if CCoutputfs=2 then\n   \+
+ zwischen:=TRUNCdetguu:  \n    save zwischen,cat(`detguu.red.mpi`); \n
+  fi:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 386 "#-----
+----------------------------------------------------------------------
+--------------------\n# Load determinant detguu\n#\n# needs: load_comp
+onent, files with components \n#\n#-----------------------------------
+------------------------------------------------------------\nload_det
+guu:=proc(CCredfull)\nglobal detguu: \n   detguu:=load_component(`detg
+uu`,[],CCredfull):\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 1472 "#--------------------------------------------------
+---------------------------------------------\n# Calculate determinant
+ of the metric gdd (development frist column after Laplace)\n#\n# need
+s: gdd\n#\n#----------------------------------------------------------
+-------------------------------------\ncalc_detgdd:=proc(CCdisporder)
+\nlocal zwischen,Odetgdd,Pdetgdd:\nglobal detgdd: \ndetgdd:=gdd[1,1]*(
+gdd[2,2]*gdd[3,3]*gdd[4,4]+gdd[2,3]*gdd[3,4]*gdd[4,2]+gdd[2,4]*gdd[3,2
+]*gdd[4,4]\n                 -gdd[4,2]*gdd[3,3]*gdd[2,4]-gdd[4,3]*gdd[
+3,4]*gdd[2,2]-gdd[4,4]*gdd[3,2]*gdd[2,3])\n       -gdd[2,1]*(gdd[1,2]*
+gdd[3,3]*gdd[4,4]+gdd[1,3]*gdd[3,4]*gdd[4,2]+gdd[1,4]*gdd[3,2]*gdd[4,3
+]\n                 -gdd[4,2]*gdd[3,3]*gdd[1,4]-gdd[4,3]*gdd[3,4]*gdd[
+1,2]-gdd[4,4]*gdd[3,2]*gdd[1,3])\n       +gdd[3,1]*(gdd[1,2]*gdd[2,3]*
+gdd[4,4]+gdd[1,3]*gdd[2,4]*gdd[4,2]+gdd[1,4]*gdd[2,2]*gdd[4,3]\n      \+
+           -gdd[4,2]*gdd[2,3]*gdd[1,4]-gdd[4,3]*gdd[2,4]*gdd[1,2]-gdd[
+4,4]*gdd[2,2]*gdd[1,3])\n       -gdd[4,1]*(gdd[1,2]*gdd[2,3]*gdd[3,4]+
+gdd[1,3]*gdd[2,4]*gdd[3,2]+gdd[1,4]*gdd[2,2]*gdd[3,3]\n               \+
+  -gdd[3,2]*gdd[2,3]*gdd[1,4]-gdd[3,3]*gdd[2,4]*gdd[1,2]-gdd[3,4]*gdd[
+2,2]*gdd[1,3]):\nOdetgdd:=subs(sublist,collect(expand(detgdd),1/c)):\n
+Pdetgdd:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expa
+nd(Odetgdd),1/c))):\nprint(`Determinant gdd (detgdd)`,subs(displist,Pd
+etgdd));\n if CCoutputfs=2 then\n    zwischen:=detgdd:  \n    save zwi
+schen,cat(`detgdd.full.mpi`);\n fi:\nend proc;" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 534 "#--------------------------------------------
+---------------------------------------------------\n# Reduce determin
+ant detgdd\n#\n# needs: detgdd\n#\n#----------------------------------
+-------------------------------------------------------------\nred_det
+gdd:=proc(CCtruncorder)\nlocal TRUNCdetgdd,zwischen:\nglobal detgdd:\n
+ TRUNCdetgdd:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collec
+t(detgdd,1/c))):\n detgdd:=TRUNCdetgdd:\n  if CCoutputfs=2 then\n    z
+wischen:=TRUNCdetgdd:  \n    save zwischen,cat(`detgdd.red.mpi`); \n  \+
+fi:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 386 "#-------
+----------------------------------------------------------------------
+------------------\n# Load determinant detgdd\n#\n# needs: load_compon
+ent, files with components \n#\n#-------------------------------------
+----------------------------------------------------------\nload_detgd
+d:=proc(CCredfull)\nglobal detgdd: \n   detgdd:=load_component(`detgdd
+`,[],CCredfull):\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 90 "Harmonic gauge condition explicitly----------------------
+---------------------------------" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 392 "#---------------------------------------------------
+--------------------------------------------\n# Taylor approximation f
+or the root (used in harmonic gauge condition)\n#---------------------
+----------------------------------------------------------------------
+----\ngapprox:=(xxx,nn,aa)->aa^(1/2)+add((1/(mul(ii,ii=1..mm)))*subs(x
+xx=aa,diff(xxx^(1/2),seq(xxx,kk=1..mm)))*(xxx-aa)^mm,mm=1..nn):" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 941 "#--------------------------
+---------------------------------------------------------------------
+\n# Harmonic gauge condition (with taylor series expansion for the roo
+t of detgdd)\n#\n# needs: guu,gapprox,detgdd\n#\n#--------------------
+----------------------------------------------------------------------
+-----\ncalc_harm_gc:=proc(CCdisporder)\nlocal aa,sq_detgdd,zwischen,Oh
+arm_gc,Pharm_gc:\nglobal harm_gc:\nsq_detgdd:=subs(xxx=-detgdd,gapprox
+(xxx,CCtaylor,1)):\nfor aa from 1 to 4 do \n  harm_gc[aa]:=add(diff(sq
+_detgdd*guu[aa,bb],xx[bb]),bb=1..4): \nod:\nfor aa from 1 to 4 do\n  O
+harm_gc[aa]:=subs(sublist,collect(expand(harm_gc[aa]),1/c)):\n  Pharm_
+gc[aa]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expan
+d(Oharm_gc[aa]),1/c))):\n  print(`Harmonic gauge condition (harm_gc)[`
+,aa-1,`]`,subs(displist,Pharm_gc[aa]));\n  if CCoutputfs=2 then\n    z
+wischen:=harm_gc[aa]:  \n    save zwischen,cat(`harm_gc_`,aa,`.full.mp
+i`);\n  fi:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+885 "#----------------------------------------------------------------
+-------------------------------\n# Harmonic gauge condition \n#\n# nee
+ds: guu,conupdndn\n#\n#-----------------------------------------------
+------------------------------------------------\ncalc_harm_gc_alt:=pr
+oc(CCdisporder)\nlocal aa,cc,zwischen,Oharm_gc_alt,Pharm_gc_alt:\nglob
+al harm_gc_alt:\nfor cc from 1 to 4 do \n  harm_gc_alt[cc]:=add(add(gu
+u[aa,bb]*conupdndn[cc,aa,bb],aa=1..4),bb=1..4): \nod:\nfor aa from 1 t
+o 4 do\n  Oharm_gc_alt[aa]:=subs(sublist,collect(expand(harm_gc_alt[aa
+]),1/c)):\n  Pharm_gc_alt[aa]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCm
+axorder)],collect(expand(Oharm_gc_alt[aa]),1/c))):\n  print(`Harmonic \+
+gauge condition (harm_gc_alt)[`,aa-1,`]`,subs(displist,Pharm_gc_alt[aa
+]));\n  if CCoutputfs=2 then\n    zwischen:=harm_gc_alt[aa]:  \n    sa
+ve zwischen,cat(`harm_gc_alt_`,aa,`.full.mpi`);\n  fi:\n od:\nend proc
+;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 89 "Standard PN gauge condition \+
+explicity----------------------------------------------------" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 907 "#--------------------------
+---------------------------------------------------------------------
+\n# Standard PN gauge condition\n#\n# needs: gdd\n#\n#----------------
+----------------------------------------------------------------------
+---------\ncalc_pn_gc:=proc(CCdisporder)\nlocal aa,zwischen,Opn_gc,Ppn
+_gc:\nglobal pn_gc:\npn_gc[1]:=add(diff(gdd[1,aa],xx[aa])-(1/2)*diff(g
+dd[aa,aa],xx[1]),aa=2..4):\nfor aa from 2 to 4 do \n  pn_gc[aa]:=add(d
+iff(gdd[aa,bb],xx[bb]),bb=2..4)-(1/2)*diff(add(gdd[bb,bb],bb=2..4)-gdd
+[1,1],xx[aa]): \nod:\nfor aa from 1 to 4 do\n  Opn_gc[aa]:=subs(sublis
+t,collect(expand(pn_gc[aa]),1/c)):\n  Ppn_gc[aa]:=(subs([seq(1/c^ii=0,
+ii=CCdisporder..CCmaxorder)],collect(expand(Opn_gc[aa]),1/c))):\n  pri
+nt(`Standard PN gauge condition (pn_gc)[`,aa-1,`]`,subs(displist,Ppn_g
+c[aa]));\n  if CCoutputfs=2 then\n    zwischen:=pn_gc[aa]:  \n    save
+ zwischen,cat(`pn_gc_`,aa,`.full.mpi`);\n  fi:\n od:\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 902 "#--------------------------
+---------------------------------------------------------------------
+\n# Gauge condition of Damour et al. (algebraic spatial isotropy condi
+tion)\n#\n# needs: gdd\n#\n#------------------------------------------
+-----------------------------------------------------\ncalc_damour_gc:
+=proc(CCdisporder)\nlocal aa,bb,zwischen,Odamour_gc,Pdamour_gc:\ngloba
+l damour_gc:\nfor aa from 2 to 4 do\n for bb from 2 to 4 do\n   damour
+_gc[aa,bb]:=gdd[1,1]*gdd[aa,bb]-1:\n   Odamour_gc[aa,bb]:=subs(sublist
+,collect(expand(damour_gc[aa,bb]),1/c)):\n   Pdamour_gc[aa,bb]:=(subs(
+[seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expand(Odamour_gc[a
+a,bb]),1/c))):\n   print(`Gauge condition Damour et al (damour_gc)[`,a
+a-1,bb-1,`]`,subs(displist,Pdamour_gc[aa,bb]));\n   if CCoutputfs=2 th
+en\n    zwischen:=damour_gc[aa,bb]:  \n    save zwischen,cat(`damour_g
+c_`,aa,`_`,bb,`.full.mpi`);\n   fi:\n od:\nod:\nend proc;" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 83 "LL Energy-Momentum Pseudo-Tensor---------
+------------------------------------------" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 1641 "#------------------------------------------------
+-----------------------------------------------\n# Landau-Lifshitz EMP
+T\n#\n# needs: conupdndn,guu\n# \n# note: kappa = 8*Pi*G\n#\n#--------
+----------------------------------------------------------------------
+----------------- \ncalc_pemtupup:=proc(CCdisporder)\nlocal ii,kk,zwis
+chen,Opemtupup,Ppemtupup:\nglobal pemtupup: \nfor ii from 1 to 4 do\n \+
+for kk from 1 to 4 do\n  pemtupup[ii,kk]:=c^4/(2*kappa) * add(add(add(
+add(( \n(2*conupdndn[nn,ll,mm]*conupdndn[pp,nn,pp]-conupdndn[nn,ll,pp]
+*conupdndn[pp,mm,nn]-conupdndn[nn,ll,nn]*conupdndn[pp,mm,pp]) \n* (guu
+[ii,ll] * guu[kk,mm] - guu[ii,kk] * guu[ll,mm])\n+ (guu[ii,ll] * guu[m
+m,nn]) * (conupdndn[kk,ll,pp]*conupdndn[pp,mm,nn]+conupdndn[kk,mm,nn]*
+conupdndn[pp,ll,pp]\n                              -conupdndn[kk,nn,pp
+]*conupdndn[pp,ll,mm]-conupdndn[kk,ll,mm]*conupdndn[pp,nn,pp] )\n+ (gu
+u[kk,ll] * guu[mm,nn]) * (conupdndn[ii,ll,pp]*conupdndn[pp,mm,nn]+conu
+pdndn[ii,mm,nn]*conupdndn[pp,ll,pp]\n                              -co
+nupdndn[ii,nn,pp]*conupdndn[pp,ll,mm]-conupdndn[ii,ll,mm]*conupdndn[pp
+,nn,pp] )\n+ (guu[ll,mm] * guu[nn,pp]) * (conupdndn[ii,ll,nn]*conupdnd
+n[kk,mm,pp]-conupdndn[ii,ll,mm]*conupdndn[kk,nn,pp] )\n),nn=1..4),mm=1
+..4),ll=1..4),pp=1..4);\n  Opemtupup[ii,kk]:=subs(sublist,collect(expa
+nd(pemtupup[ii,kk]),1/c)):\n  Ppemtupup[ii,kk]:=(subs([seq(1/c^ii=0,ii
+=CCdisporder..CCmaxorder)],collect(expand(Opemtupup[ii,kk]),1/c))):\n \+
+ print(`LL EMPT (pemtupup)[`,ii-1,kk-1,`]`,subs(displist,Ppemtupup[ii,
+kk]));\n  if CCoutputfs=2 then\n    zwischen:=pemtupup[ii,kk]:  \n    \+
+save zwischen,cat(`pemtupup_`,ii,`_`,kk,`.full.mpi`);\n  fi: \n od:\no
+d:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 667 "#--------
+----------------------------------------------------------------------
+-----------------\n# Reduce Landau-Lifshitz EMPT \n#\n# needs: pemtupu
+p\n#\n#---------------------------------------------------------------
+--------------------------------\nred_pemtupup:=proc(CCtruncorder)\nlo
+cal aa,bb,TRUNCpemtupup,zwischen:\nglobal pemtupup:\nfor aa from 1 to \+
+4 do\n for bb from 1 to 4 do\n  TRUNCpemtupup[aa,bb]:=(subs([seq(1/c^i
+i=0,ii=CCtruncorder..CCmaxorder)],collect(pemtupup[aa,bb],1/c))):\n  p
+emtupup[aa,bb]:=TRUNCpemtupup[aa,bb]:\n  if CCoutputfs=2 then\n    zwi
+schen:=TRUNCpemtupup[aa,bb]:  \n    save zwischen,cat(`pemtupup_`,aa,`
+_`,bb,`.red.mpi`);\n  fi:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 480 "#--------------------------------------------
+---------------------------------------------------\n# Load Landau-Lif
+shitz EMPT\n#\n# needs: load_component, files with components \n#\n#--
+----------------------------------------------------------------------
+-----------------------\nload_pemtupup:=proc(CCredfull)\nlocal aa,bb:
+\nglobal pemtupup:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n
+   pemtupup[aa,bb]:=load_component(`pemtupup`,[aa,bb],CCredfull):\n  o
+d: \n od:\nRETURN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 877 "#------------------------------------------------------------
+-----------------------------------\n# Landau-Lifshitz EM complex \n#
+\n# needs: detgdd,tupup,pemtupup\n#\n#--------------------------------
+---------------------------------------------------------------\ncalc_
+thetaupup:=proc(CCdisporder)\nlocal ii,jj,zwischen,Pthetaupup,Othetaup
+up:\nglobal thetaupup:\nfor ii from 1 to 4 do\n for jj from 1 to 4 do
+\n   thetaupup[ii,jj]:=(-detgdd)*(tupup[ii,jj]+pemtupup[ii,jj]):\n   O
+thetaupup[ii,jj]:=subs(sublist,collect(expand(thetaupup[ii,jj]),1/c)):
+\n   Pthetaupup[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder
+)],collect(expand(Othetaupup[ii,jj]),1/c))):\n   print(`LL complex (th
+etaupup)[`,ii-1,jj-1,`]`,subs(displist,Pthetaupup[ii,jj]));\n   if CCo
+utputfs=2 then\n    zwischen:=thetaupup[ii,jj]:  \n    save zwischen,c
+at(`thetaupup_`,ii,`_`,jj,`.full.mpi`):\n   fi:\n od:\nod:\nend proc;
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 669 "#---------------------
+----------------------------------------------------------------------
+----\n# Reduce EM complex\n#\n# needs: thetaupup\n#\n#----------------
+----------------------------------------------------------------------
+---------\nred_thetaupup:=proc(CCtruncorder)\nlocal aa,bb,TRUNCthetaup
+up,zwischen:\nglobal thetaupup:\nfor aa from 1 to 4 do\n for bb from 1
+ to 4 do\n  TRUNCthetaupup[aa,bb]:=(subs([seq(1/c^ii=0,ii=CCtruncorder
+..CCmaxorder)],collect(thetaupup[aa,bb],1/c))):\n  thetaupup[aa,bb]:=T
+RUNCthetaupup[aa,bb]:\n  if CCoutputfs=2 then\n    zwischen:=TRUNCthet
+aupup[aa,bb]:  \n    save zwischen,cat(`thetaupup_`,aa,`_`,bb,`.red.mp
+i`):\n   fi:\n  od:\n od:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 474 "#---------------------------------------------------
+--------------------------------------------\n# Load EM complex\n#\n# \+
+needs: load_component, files with components \n#\n#-------------------
+----------------------------------------------------------------------
+------\nload_thetaupup:=proc(CCredfull)\nlocal aa,bb:\nglobal thetaupu
+p:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n   thetaupup[aa,
+bb]:=load_component(`thetaupup`,[aa,bb],CCredfull):\n  od: \n od:\nRET
+URN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 869 "#----
+----------------------------------------------------------------------
+---------------------\n# Calculate partial derivative of the EM comple
+x upuppdn\n#\n# needs: thetaupup\n#\n#--------------------------------
+---------------------------------------------------------------\ncalc_
+thetaupuppdn:=proc(CCdisporder)\nlocal ii,zwischen,Othetaupuppdn,Pthet
+aupuppdn:\nglobal thetaupuppdn:\nfor ii from 1 to 4 do\n  thetaupuppdn
+[ii]:=add(diff(thetaupup[ii,jj],xx[jj]),jj=1..4):\n  Othetaupuppdn[ii]
+:=subs(sublist,collect(expand(thetaupuppdn[ii]),1/c)):\n  Pthetaupuppd
+n[ii]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expand
+(Othetaupuppdn[ii]),1/c))):\n  print(`Partial EM complex (thetaupuppdn
+)[`,ii-1,`]`,subs(displist,Pthetaupuppdn[ii]));\n  if CCoutputfs=2 the
+n  \n   zwischen:=thetaupuppdn[ii]:\n   save zwischen,cat(`thetaupuppd
+n_`,ii,`.full.mpi`):\n  fi:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 
+"" {MPLTEXT 1 0 631 "#------------------------------------------------
+-----------------------------------------------\n# Reduce partial deri
+vative of EM complex upuppdn\n#\n# needs: thetaupuppdn\n#\n#----------
+----------------------------------------------------------------------
+---------------\nred_thetaupuppdn:=proc(CCtruncorder)\nlocal aa,TRUNCt
+hetaupuppdn,zwischen:\nglobal thetaupuppdn:\n for aa from 1 to 4 do\n \+
+ TRUNCthetaupuppdn[aa]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorde
+r)],collect(thetaupuppdn[aa],1/c))):\n  if CCoutputfs=2 then  \n   zwi
+schen:=TRUNCthetaupuppdn[aa]:  \n   save zwischen,cat(`thetaupuppdn_`,
+aa,`.red.mpi`):\n  fi:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 476 "#---------------------------------------------------
+--------------------------------------------\n# Load partial derivativ
+e of EM complex upuppdn\n#\n# needs: load_component, files with compon
+ents \n#\n#-----------------------------------------------------------
+------------------------------------\nload_thetaupuppdn:=proc(CCredful
+l)\nlocal aa:\nglobal thetaupuppdn:\n for aa from 1 to 4 do \n   theta
+upuppdn[aa]:=load_component(`thetaupuppdn`,[aa],CCredfull):\n od:\nRET
+URN():\nend proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 93 "Kinematical \+
+quantities------------------------------------------------------------
+-----------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 813 "#----------
+----------------------------------------------------------------------
+---------------\n# Covariant derivative of uu\n#\n# needs: uu,conupdnd
+n\n#\n#---------------------------------------------------------------
+--------------------------------\ncalc_cuu:=proc(CCdisporder)\nlocal i
+i,jj,zwischen,Ocuu,Pcuu:\nglobal cuu:\nfor ii from 1 to 4 do\n for jj \+
+from 1 to 4 do\n  cuu[ii,jj]:=diff(uu[ii],xx[jj])+add(conupdndn[ii,kk,
+jj]*uu[kk],kk=1..4);\n  Ocuu[ii,jj]:=subs(sublist,collect(expand(cuu[i
+i,jj]),1/c)):\n  Pcuu[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCma
+xorder)],collect(expand(Ocuu[ii,jj]),1/c))):\n  print(`Covariant deriv
+ative uu (cuu)[`,ii-1,jj-1,`]`,subs(displist,Pcuu[ii,jj]));\n  if CCou
+tputfs=2 then  \n   zwischen:=cuu[ii,jj]:\n   save zwischen,cat(`cuu_`
+,ii,`_`,jj,`.full.mpi`):\n  fi:\n od:\nod:\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 620 "#---------------------------------
+--------------------------------------------------------------\n# Redu
+ce covariant derivative of uu\n#\n# needs: cuu\n#\n#------------------
+----------------------------------------------------------------------
+-------\nred_cuu:=proc(CCtruncorder)\nlocal ii,jj,zwischen,TRUNCcuu:\n
+global cuu:\nfor ii from 1 to 4 do\n for jj from 1 to 4 do\n  TRUNCcuu
+[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(cuu
+[ii,jj],1/c))):\n  cuu[ii,jj]:=TRUNCcuu[ii,jj]:\n  if CCoutputfs=2 the
+n  \n   zwischen:=TRUNCcuu[ii,jj]:\n   save zwischen,cat(`cuu_`,ii,`_`
+,jj,`.red.mpi`):\n  fi:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 466 "#----------------------------------------------
+-------------------------------------------------\n# Load covariant de
+rivative of uu\n#\n# needs: load_component, files with components \n#
+\n#-------------------------------------------------------------------
+----------------------------\nload_cuu:=proc(CCredfull)\nlocal aa,bb:
+\nglobal cuu:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n   cu
+u[aa,bb]:=load_component(`cuu`,[aa,bb],CCredfull):\n  od: \n od:\nRETU
+RN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 810 "#-----
+----------------------------------------------------------------------
+--------------------\n# Covariant derivative ud\n#\n# needs: ud,conupd
+ndn\n#\n#-------------------------------------------------------------
+----------------------------------\ncalc_cud:=proc(CCdisporder)\nlocal
+ ii,jj,zwischen,Ocud,Pcud;\nglobal cud;\nfor ii from 1 to 4 do\n for j
+j from 1 to 4 do\n  cud[ii,jj]:=diff(ud[ii],xx[jj])-add(conupdndn[kk,i
+i,jj]*ud[kk],kk=1..4);\n  Ocud[ii,jj]:=subs(sublist,collect(expand(cud
+[ii,jj]),1/c)):\n  Pcud[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CC
+maxorder)],collect(expand(Ocud[ii,jj]),1/c))):\n  print(`Covariant der
+ivative ud (cud)[`,ii-1,jj-1,`]`,subs(displist,Pcud[ii,jj]));\n  if CC
+outputfs=2 then  \n   zwischen:=cud[ii,jj]:\n   save zwischen,cat(`cud
+_`,ii,`_`,jj,`.full.mpi`):\n  fi:\n od:\nod:\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 620 "#---------------------------------
+--------------------------------------------------------------\n# Redu
+ce covariant derivative of ud\n#\n# needs: cud\n#\n#------------------
+----------------------------------------------------------------------
+-------\nred_cud:=proc(CCtruncorder)\nlocal ii,jj,zwischen,TRUNCcud:\n
+global cud:\nfor ii from 1 to 4 do\n for jj from 1 to 4 do\n  TRUNCcud
+[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(cud
+[ii,jj],1/c))):\n  cud[ii,jj]:=TRUNCcud[ii,jj]:\n  if CCoutputfs=2 the
+n  \n   zwischen:=TRUNCcud[ii,jj]:\n   save zwischen,cat(`cud_`,ii,`_`
+,jj,`.red.mpi`):\n  fi:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 466 "#----------------------------------------------
+-------------------------------------------------\n# Load covariant de
+rivative of ud\n#\n# needs: load_component, files with components \n#
+\n#-------------------------------------------------------------------
+----------------------------\nload_cud:=proc(CCredfull)\nlocal aa,bb:
+\nglobal cud:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n   cu
+d[aa,bb]:=load_component(`cud`,[aa,bb],CCredfull):\n  od: \n od:\nRETU
+RN():\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 673 "#-----
+----------------------------------------------------------------------
+--------------------\n# Calculate expansion of uu\n#\n# needs: cuu\n#
+\n#-------------------------------------------------------------------
+----------------------------\ncalc_thetascalar:=proc(CCdisporder)\nloc
+al zwischen,Otheta,Ptheta:\nglobal thetascalar:\nthetascalar:=add(cuu[
+ii,ii],ii=1..4):\nOtheta:=subs(sublist,collect(expand(thetascalar),1/c
+)):\nPtheta:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(
+expand(Otheta),1/c))):\nprint(`Expansion uu (thetascalar)`,subs(displi
+st,Ptheta));\nif CCoutputfs=2 then  \n  zwischen:=thetascalar:\n  save
+ zwischen,cat(`thetascalar.full.mpi`):\n fi:\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 547 "#---------------------------------
+--------------------------------------------------------------\n# Redu
+ce expansion of uu\n#\n# needs: thetascalar\n#\n#---------------------
+----------------------------------------------------------------------
+----\nred_thetascalar:=proc(CCtruncorder)\nlocal zwischen,TRUNCtheta:
+\nglobal thetascalar:\nTRUNCtheta:=(subs([seq(1/c^ii=0,ii=CCtruncorder
+..CCmaxorder)],collect(thetascalar,1/c))):\nthetascalar:=TRUNCtheta:\n
+if CCoutputfs=2 then  \n  zwischen:=TRUNCtheta:\n  save zwischen,cat(`
+thetascalar.red.mpi`):\n fi:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 402 "#---------------------------------------------------
+--------------------------------------------\n# Load expansion of ud\n
+#\n# needs: load_component, files with components \n#\n#--------------
+----------------------------------------------------------------------
+-----------\nload_thetascalar:=proc(CCredfull)\nglobal thetascalar: \n
+  thetascalar:=load_component(`thetascalar`,[],CCredfull):\nRETURN():
+\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 704 "#----------
+----------------------------------------------------------------------
+---------------\n# Calculate acceleration of uu\n#\n# needs: cud,uu\n#
+\n#-------------------------------------------------------------------
+----------------------------\ncalc_acd:=proc(CCdisporder)\nlocal ii,Oa
+cd,Pacd,zwischen:\nglobal acd:\nfor ii from 1 to 4 do \n acd[ii]:=add(
+cud[ii,kk]*uu[kk],kk=1..4):\n Oacd[ii]:=subs(sublist,collect(expand(ac
+d[ii]),1/c)):\n Pacd[ii]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxord
+er)],collect(expand(Oacd[ii]),1/c))):\n print(`Acceleration uu (acd)[`
+,ii-1,`]`,subs(displist,Pacd[ii]));\n if CCoutputfs=2 then  \n   zwisc
+hen:=acd[ii]:\n   save zwischen,cat(`acd_`,ii,`.full.mpi`):\n  fi:\nod
+:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 557 "#---------
+----------------------------------------------------------------------
+----------------\n# Reduce acceleration of uu\n#\n# needs: acd\n#\n#--
+----------------------------------------------------------------------
+-----------------------\nred_acd:=proc(CCtruncorder)\nlocal ii,TRUNCac
+d,zwischen:\nglobal acd:\nfor ii from 1 to 4 do \n TRUNCacd[ii]:=(subs
+([seq(1/c^ii=0,ii=CCtruncorder..CCmaxorder)],collect(acd[ii],1/c))):\n
+ acd[ii]:=TRUNCacd[ii]:\n if CCoutputfs=2 then  \n   zwischen:=TRUNCac
+d[ii]:\n   save zwischen,cat(`acd_`,ii,`.red.mpi`):\n  fi:\nod:\nend p
+roc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 415 "#-----------------
+----------------------------------------------------------------------
+--------\n# Load acceleration of uu\n#\n# needs: load_component, files
+ with components \n#\n#-----------------------------------------------
+------------------------------------------------\nload_acd:=proc(CCred
+full)\nlocal aa:\nglobal acd:\nfor aa from 1 to 4 do \n  acd[aa]:=load
+_component(`acd`,[aa],CCredfull):\nod:\nRETURN():\nend proc;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 866 "#--------------------------
+---------------------------------------------------------------------
+\n# Calculate rotation of uu\n#\n# needs: cud,ud,acd\n#\n#------------
+----------------------------------------------------------------------
+-------------\ncalc_omegadd:=proc(CCdisporder)\nlocal ii,jj,Oomegadd,P
+omegadd,zwischen:\nglobal omegadd:\nfor ii from 1 to 4 do\n for jj fro
+m 1 to 4 do\n   omegadd[ii,jj]:=(1/2)*(cud[ii,jj]-cud[jj,ii])+(1/2)*(u
+d[ii]*acd[jj]-ud[jj]*acd[ii]):\n   Oomegadd[ii,jj]:=subs(sublist,colle
+ct(expand(omegadd[ii,jj]),1/c)):\n   Pomegadd[ii,jj]:=(subs([seq(1/c^i
+i=0,ii=CCdisporder..CCmaxorder)],collect(expand(Oomegadd[ii,jj]),1/c))
+):\n   print(`Rotation uu (omegadd)[`,ii-1,jj-1,`]`,subs(displist,Pome
+gadd[ii,jj]));\n   if CCoutputfs=2 then  \n    zwischen:=omegadd[ii,jj
+]:\n    save zwischen,cat(`omegadd_`,ii,`_`,jj,`.full.mpi`):\n   fi:\n
+  od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 652 "#
+----------------------------------------------------------------------
+-------------------------\n# Reduce rotation of uu\n#\n# needs: omegad
+d\n#\n#---------------------------------------------------------------
+--------------------------------\nred_omegadd:=proc(CCtruncorder)\nloc
+al ii,jj,TRUNComegadd,zwischen:\nglobal omegadd:\nfor ii from 1 to 4 d
+o\n for jj from 1 to 4 do\n   TRUNComegadd[ii,jj]:=(subs([seq(1/c^ii=0
+,ii=CCtruncorder..CCmaxorder)],collect(omegadd[ii,jj],1/c))):\n   omeg
+add[ii,jj]:=TRUNComegadd[ii,jj]:\n   if CCoutputfs=2 then  \n   zwisch
+en:=TRUNComegadd[ii,jj]:\n   save zwischen,cat(`omegadd_`,ii,`_`,jj,`.
+red.mpi`):\n  fi:\n  od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 470 "#---------------------------------------------------
+--------------------------------------------\n# Load rotation of uu\n#
+\n# needs: load_component, files with components \n#\n#---------------
+----------------------------------------------------------------------
+----------\nload_omegadd:=proc(CCredfull)\nlocal aa,bb:\nglobal omegad
+d:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n   omegadd[aa,bb
+]:=load_component(`omegadd`,[aa,bb],CCredfull):\n  od: \n od:\nRETURN(
+):\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 884 "#--------
+----------------------------------------------------------------------
+-----------------\n# Calculate shear (with trace) of uu\n#\n# needs: c
+ud,ud,acd\n#\n#-------------------------------------------------------
+----------------------------------------\ncalc_thetadd:=proc(CCdispord
+er)\nlocal ii,jj,Othetadd,Pthetadd,zwischen:\nglobal thetadd:\nfor ii \+
+from 1 to 4 do\n for jj from 1 to 4 do\n   thetadd[ii,jj]:=(1/2)*(cud[
+ii,jj]+cud[jj,ii])-(1/2)*(ud[ii]*acd[jj]+ud[jj]*acd[ii]):\n   Othetadd
+[ii,jj]:=subs(sublist,collect(expand(thetadd[ii,jj]),1/c)):\n   Ptheta
+dd[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(ex
+pand(Othetadd[ii,jj]),1/c))):\n   print(`Shear with trace uu (thetadd)
+[`,ii-1,jj-1,`]`,subs(displist,Pthetadd[ii,jj]));\n   if CCoutputfs=2 \+
+then  \n    zwischen:=thetadd[ii,jj]:\n    save zwischen,cat(`thetadd_
+`,ii,`_`,jj,`.full.mpi`):\n   fi:\n  od:\nod:\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 668 "#---------------------------------
+--------------------------------------------------------------\n# Redu
+ce shear (with trace) of uu\n#\n# needs: thetadd\n#\n#----------------
+----------------------------------------------------------------------
+---------\nred_thetadd:=proc(CCtruncorder)\nlocal ii,jj,TRUNCthetadd,z
+wischen:\nglobal thetadd:\nfor ii from 1 to 4 do\n for jj from 1 to 4 \+
+do\n   TRUNCthetadd[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCtruncorder..CCmax
+order)],collect(thetadd[ii,jj],1/c))):   \n   thetadd[ii,jj]:=TRUNCthe
+tadd[ii,jj]:\n   if CCoutputfs=2 then  \n    zwischen:=TRUNCthetadd[ii
+,jj]:\n    save zwischen,cat(`thetadd_`,ii,`_`,jj,`.red.mpi`):\n   fi:
+\n  od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 480 
+"#--------------------------------------------------------------------
+---------------------------\n# Load shear (with trace) of uu\n#\n# nee
+ds: load_component, files with components \n#\n#----------------------
+----------------------------------------------------------------------
+---\nload_thetadd:=proc(CCredfull)\nlocal aa,bb:\nglobal thetadd:\n fo
+r aa from 1 to 4 do\n  for bb from 1 to 4 do \n   thetadd[aa,bb]:=load
+_component(`thetadd`,[aa,bb],CCredfull):\n  od: \n od:\nRETURN():\nend
+ proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 858 "#---------------
+----------------------------------------------------------------------
+----------\n# Calculate shear of uu\n#\n# needs: thetadd,thetascalar,g
+dd,ud\n#\n#-----------------------------------------------------------
+------------------------------------\ncalc_sigmadd:=proc(CCdisporder)
+\nlocal ii,jj,zwischen,Osigmadd,Psigmadd:\nglobal sigmadd:\nfor ii fro
+m 1 to 4 do\n for jj from 1 to 4 do\n  sigmadd[ii,jj]:=thetadd[ii,jj]-
+(1/3)*thetascalar*(gdd[ii,jj]-ud[ii]*ud[jj]):\n  Osigmadd[ii,jj]:=subs
+(sublist,collect(expand(sigmadd[ii,jj]),1/c)):\n  Psigmadd[ii,jj]:=(su
+bs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(expand(Osigmadd[
+ii,jj]),1/c))):\n  print(`Shear (sigmadd)[`,ii-1,jj-1,`]`,subs(displis
+t,Psigmadd[ii,jj]));\n  if CCoutputfs=2 then  \n    zwischen:=sigmadd[
+ii,jj]:\n    save zwischen,cat(`sigmadd_`,ii,`_`,jj,`.full.mpi`):\n  f
+i:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+647 "#----------------------------------------------------------------
+-------------------------------\n# Reduce shear of uu\n#\n# needs: sig
+madd\n#\n#------------------------------------------------------------
+-----------------------------------\nred_sigmadd:=proc(CCtruncorder)\n
+local ii,jj,zwischen,TRUNCsigmadd:\nglobal sigmadd:\nfor ii from 1 to \+
+4 do\n for jj from 1 to 4 do\n  TRUNCsigmadd[ii,jj]:=(subs([seq(1/c^ii
+=0,ii=CCtruncorder..CCmaxorder)],collect(sigmadd[ii,jj],1/c))):\n  sig
+madd[ii,jj]:=TRUNCsigmadd[ii,jj]:\n  if CCoutputfs=2 then  \n    zwisc
+hen:=TRUNCsigmadd[ii,jj]:\n    save zwischen,cat(`sigmadd_`,ii,`_`,jj,
+`.red.mpi`):\n  fi:\n od:\nod:\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 467 "#-------------------------------------------------
+----------------------------------------------\n# Load shear of uu\n#
+\n# needs: load_component, files with components \n#\n#---------------
+----------------------------------------------------------------------
+----------\nload_sigmadd:=proc(CCredfull)\nlocal aa,bb:\nglobal sigmad
+d:\n for aa from 1 to 4 do\n  for bb from 1 to 4 do \n   sigmadd[aa,bb
+]:=load_component(`sigmadd`,[aa,bb],CCredfull):\n  od: \n od:\nRETURN(
+):\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 985 "#--------
+----------------------------------------------------------------------
+-----------------\n# Crosscheck (check if the above quantities really \+
+decompose the covariant derivative of u)\n#\n# needs: omegadd,sigmadd,
+thetascalar,gdd,ud,acd,cud\n#\n#--------------------------------------
+---------------------------------------------------------\ncheck_decom
+position:=proc(CCdisporder)\nlocal ii,jj,crossc,Pcrossc,Ocrossc:\nfor \+
+ii from 1 to 4 do\n for jj from 1 to 4 do\n  crossc[ii,jj]:=omegadd[ii
+,jj]+sigmadd[ii,jj]+(1/3)*thetascalar*(gdd[ii,jj]-ud[ii]*ud[jj])+acd[i
+i]*ud[jj]:\n  Ocrossc[ii,jj]:=subs(sublist,collect(expand(crossc[ii,jj
+]),1/c)):\n  Pcrossc[ii,jj]:=(subs([seq(1/c^ii=0,ii=CCdisporder..CCmax
+order)],collect(expand(Ocrossc[ii,jj]),1/c))):    \n  print(`Crosschec
+k[`,ii-1,jj-1,`]:`,subs(displist,Pcrossc[ii,jj]),`\\n compare \\n`,sub
+s(displist,(subs([seq(1/c^ii=0,ii=CCdisporder..CCmaxorder)],collect(ex
+pand(subs(sublist,collect(expand(cud[ii,jj]),1/c))),1/c)))));\n od:\no
+d: \nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 963 "#-------
+----------------------------------------------------------------------
+------------------\n# Load component from file\n#\n# needs: object nam
+e, index to be loaded, full (=1) or reduced (=2) file\n#\n#-----------
+----------------------------------------------------------------------
+--------------\nload_component:=proc(obname,index,CCredfull)\nlocal aa
+,file_name:\nglobal zwischen:\n   if CCredfull=1 then \n    if nops(in
+dex)>0 then\n     file_name:=convert(cat(obname,seq(cat(`_`,index[bb])
+,bb=1..nops(index)),`.full.mpi`),string);\n    fi:\n    if nops(index)
+=0 then\n     file_name:=convert(cat(obname,`.full.mpi`),string);   \n
+    fi:\n   fi:\n   if CCredfull=2 then\n    if nops(index)>0 then\n  \+
+   file_name:=convert(cat(obname,seq(cat(`_`,index[bb]),bb=1..nops(ind
+ex)),`.red.mpi`),string);\n    fi:\n    if nops(index)=0 then\n     fi
+le_name:=convert(cat(obname,`.red.mpi`),string);   \n    fi:\n   fi:\n
+   print(file_name);\n   read file_name;\n   RETURN(zwischen);\nend pr
+oc;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 600 "#------------------
+----------------------------------------------------------------------
+-------\n# Display component\n#\n# needs: sublist,displist,CCmaxorder
+\n#\n# call: component name, truncation order\n#\n#-------------------
+----------------------------------------------------------------------
+------\ndisp_component:=proc(obname,CCdisporder)\nlocal zwischen,Oobna
+me,Pobname:\n zwischen:=eval(cat(obname)):\n Oobname:=subs(sublist,col
+lect(expand(zwischen),1/c)):\n Pobname:=(subs([seq(1/c^ii=0,ii=CCdispo
+rder..CCmaxorder)],collect(expand(Oobname),1/c))):\n print(cat(obname)
+,subs(displist,Pobname));\nend proc;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 6395 "CCprocrustes_dir:=\"./procrustes1_0/\";\nsave syste
+m_status,cat(CCprocrustes_dir,\"system_status.procrustes\");\nsave fap
+prox,cat(CCprocrustes_dir,\"fapprox.procrustes\");\nsave gapprox,cat(C
+Cprocrustes_dir,\"gapprox.procrustes\");\nsave disp_component,cat(CCpr
+ocrustes_dir,\"disp_component.procrustes\");\nsave load_component,cat(
+CCprocrustes_dir,\"load_component.procrustes\");\nsave check_velnorm,c
+at(CCprocrustes_dir,\"check_velnorm.procrustes\");\nsave check_metrici
+d,cat(CCprocrustes_dir,\"check_metricid.procrustes\");\nsave check_dec
+omposition,cat(CCprocrustes_dir,\"check_decomposition.procrustes\");\n
+save calc_harm_gc,cat(CCprocrustes_dir,\"calc_harm_gc.procrustes\");\n
+save calc_harm_gc_alt,cat(CCprocrustes_dir,\"calc_harm_gc_alt.procrust
+es\");\nsave calc_pn_gc,cat(CCprocrustes_dir,\"calc_pn_gc.procrustes\"
+);\nsave calc_damour_gc,cat(CCprocrustes_dir,\"calc_damour_gc.procrust
+es\");\nsave calc_uu,cat(CCprocrustes_dir,\"calc_uu.procrustes\");\nsa
+ve red_uu,cat(CCprocrustes_dir,\"red_uu.procrustes\");\nsave load_uu,c
+at(CCprocrustes_dir,\"load_uu.procrustes\");\nsave calc_ud,cat(CCprocr
+ustes_dir,\"calc_ud.procrustes\");\nsave red_ud,cat(CCprocrustes_dir,
+\"red_ud.procrustes\");\nsave load_ud,cat(CCprocrustes_dir,\"load_ud.p
+rocrustes\");\nsave calc_tupup,cat(CCprocrustes_dir,\"calc_tupup.procr
+ustes\");\nsave red_tupup,cat(CCprocrustes_dir,\"red_tupup.procrustes
+\");\nsave load_tupup,cat(CCprocrustes_dir,\"load_tupup.procrustes\");
+\nsave calc_tdndn,cat(CCprocrustes_dir,\"calc_tdndn.procrustes\");\nsa
+ve red_tdndn,cat(CCprocrustes_dir,\"red_tdndn.procrustes\");\nsave loa
+d_tdndn,cat(CCprocrustes_dir,\"load_tdndn.procrustes\");\nsave calc_tu
+pdn,cat(CCprocrustes_dir,\"calc_tupdn.procrustes\");\nsave red_tupdn,c
+at(CCprocrustes_dir,\"red_tupdn.procrustes\");\nsave load_tupdn,cat(CC
+procrustes_dir,\"load_tupdn.procrustes\");\nsave calc_rhs,cat(CCprocru
+stes_dir,\"calc_rhs.procrustes\");\nsave red_rhs,cat(CCprocrustes_dir,
+\"red_rhs.procrustes\");\nsave load_rhs,cat(CCprocrustes_dir,\"load_rh
+s.procrustes\");\nsave calc_condndndn,cat(CCprocrustes_dir,\"calc_cond
+ndndn.procrustes\");\nsave red_condndndn,cat(CCprocrustes_dir,\"red_co
+ndndndn.procrustes\");\nsave load_condndndn,cat(CCprocrustes_dir,\"loa
+d_condndndn.procrustes\");\nsave calc_conupdndn,cat(CCprocrustes_dir,
+\"calc_conupdndn.procrustes\");\nsave red_conupdndn,cat(CCprocrustes_d
+ir,\"red_conupdndn.procrustes\");\nsave load_conupdndn,cat(CCprocruste
+s_dir,\"load_conupdndn.procrustes\");\nsave calc_ctupup,cat(CCprocrust
+es_dir,\"calc_ctupup.procrustes\");\nsave red_ctupup,cat(CCprocrustes_
+dir,\"red_ctupup.procrustes\");\nsave load_ctupup,cat(CCprocrustes_dir
+,\"load_ctupup.procrustes\");\nsave calc_eom,cat(CCprocrustes_dir,\"ca
+lc_eom.procrustes\");\nsave red_eom,cat(CCprocrustes_dir,\"red_eom.pro
+crustes\");\nsave load_eom,cat(CCprocrustes_dir,\"load_eom.procrustes
+\");\nsave calc_ricdndn,cat(CCprocrustes_dir,\"calc_ricdndn.procrustes
+\");\nsave red_ricdndn,cat(CCprocrustes_dir,\"red_ricdndn.procrustes\"
+);\nsave load_ricdndn,cat(CCprocrustes_dir,\"load_ricdndn.procrustes\"
+);\nsave calc_ricupdn,cat(CCprocrustes_dir,\"calc_ricupdn.procrustes\"
+);\nsave red_ricupdn,cat(CCprocrustes_dir,\"red_ricupdn.procrustes\");
+\nsave load_ricupdn,cat(CCprocrustes_dir,\"load_ricupdn.procrustes\");
+\nsave calc_ricscalar,cat(CCprocrustes_dir,\"calc_ricscalar.procrustes
+\");\nsave red_ricscalar,cat(CCprocrustes_dir,\"red_ricscalar.procrust
+es\");\nsave load_ricscalar,cat(CCprocrustes_dir,\"load_ricscalar.proc
+rustes\");\nsave calc_riemupdndndn,cat(CCprocrustes_dir,\"calc_riemupd
+ndndn.procrustes\");\nsave red_riemupdndndn,cat(CCprocrustes_dir,\"red
+_riemupdndndn.procrustes\");\nsave load_riemupdndndn,cat(CCprocrustes_
+dir,\"load_riemupdndndn.procrustes\");\nsave calc_riemdndndndn,cat(CCp
+rocrustes_dir,\"calc_riemdndndndn.procrustes\");\nsave red_riemdndndnd
+n,cat(CCprocrustes_dir,\"red_riemdndndndn.procrustes\");\nsave load_ri
+emdndndndn,cat(CCprocrustes_dir,\"load_riemdndndndn.procrustes\");\nsa
+ve calc_weyldndndndn,cat(CCprocrustes_dir,\"calc_weyldndndndn.procrust
+es\");\nsave red_weyldndndndn,cat(CCprocrustes_dir,\"red_weyldndndndn.
+procrustes\");\nsave load_weyldndndndn,cat(CCprocrustes_dir,\"load_wey
+ldndndndn.procrustes\");\nsave calc_detguu,cat(CCprocrustes_dir,\"calc
+_detguu.procrustes\");\nsave red_detguu,cat(CCprocrustes_dir,\"red_det
+guu.procrustes\");\nsave load_detguu,cat(CCprocrustes_dir,\"load_detgu
+u.procrustes\");\nsave calc_detgdd,cat(CCprocrustes_dir,\"calc_detgdd.
+procrustes\");\nsave red_detgdd,cat(CCprocrustes_dir,\"red_detgdd.proc
+rustes\");\nsave load_detgdd,cat(CCprocrustes_dir,\"load_detgdd.procru
+stes\");\nsave calc_pemtupup,cat(CCprocrustes_dir,\"calc_pemtupup.proc
+rustes\");\nsave red_pemtupup,cat(CCprocrustes_dir,\"red_pemtupup.proc
+rustes\");\nsave load_pemtupup,cat(CCprocrustes_dir,\"load_pemtupup.pr
+ocrustes\");\nsave calc_thetaupup,cat(CCprocrustes_dir,\"calc_thetaupu
+p.procrustes\");\nsave red_thetaupup,cat(CCprocrustes_dir,\"red_thetau
+pup.procrustes\");\nsave load_thetaupup,cat(CCprocrustes_dir,\"load_th
+etaupup.procrustes\");\nsave calc_thetaupuppdn,cat(CCprocrustes_dir,\"
+calc_thetaupuppdn.procrustes\");\nsave red_thetaupuppdn,cat(CCprocrust
+es_dir,\"red_thetaupuppdn.procrustes\");\nsave load_thetaupuppdn,cat(C
+Cprocrustes_dir,\"load_thetaupuppdn.procrustes\");\nsave calc_cuu,cat(
+CCprocrustes_dir,\"calc_cuu.procrustes\");\nsave red_cuu,cat(CCprocrus
+tes_dir,\"red_cuu.procrustes\");\nsave load_cuu,cat(CCprocrustes_dir,
+\"load_cuu.procrustes\");\nsave calc_cud,cat(CCprocrustes_dir,\"calc_c
+ud.procrustes\");\nsave red_cud,cat(CCprocrustes_dir,\"red_cud.procrus
+tes\");\nsave load_cud,cat(CCprocrustes_dir,\"load_cud.procrustes\");
+\nsave calc_thetascalar,cat(CCprocrustes_dir,\"calc_thetascalar.procru
+stes\");\nsave red_thetascalar,cat(CCprocrustes_dir,\"red_thetascalar.
+procrustes\");\nsave load_thetascalar,cat(CCprocrustes_dir,\"load_thet
+ascalar.procrustes\");\nsave calc_acd,cat(CCprocrustes_dir,\"calc_acd.
+procrustes\");\nsave red_acd,cat(CCprocrustes_dir,\"red_acd.procrustes
+\");\nsave load_acd,cat(CCprocrustes_dir,\"load_acd.procrustes\");\nsa
+ve calc_omegadd,cat(CCprocrustes_dir,\"calc_omegadd.procrustes\");\nsa
+ve red_omegadd,cat(CCprocrustes_dir,\"red_omegadd.procrustes\");\nsave
+ load_omegadd,cat(CCprocrustes_dir,\"load_omegadd.procrustes\");\nsave
+ calc_thetadd,cat(CCprocrustes_dir,\"calc_thetadd.procrustes\");\nsave
+ red_thetadd,cat(CCprocrustes_dir,\"red_thetadd.procrustes\");\nsave l
+oad_thetadd,cat(CCprocrustes_dir,\"load_thetadd.procrustes\");\nsave c
+alc_sigmadd,cat(CCprocrustes_dir,\"calc_sigmadd.procrustes\");\nsave r
+ed_sigmadd,cat(CCprocrustes_dir,\"red_sigmadd.procrustes\");\nsave loa
+d_sigmadd,cat(CCprocrustes_dir,\"load_sigmadd.procrustes\");" }}}}}
+{MARK "1" 0 }{VIEWOPTS 1 1 0 3 4 1802 1 1 1 1 }{PAGENUMBERS 0 1 2 33 
+1 1 }

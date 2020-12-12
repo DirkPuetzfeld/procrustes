@@ -1,0 +1,5 @@
+system_status := proc () print('Memusage',evalf(1/1048576*kernelopts(bytesused
+)),'Mbyte'); print('Alloc',evalf(1/1048576*kernelopts(bytesalloc)),'Mbyte'); 
+print('Datalimit',evalf(1/1048576*kernelopts(datalimit)),'Mbyte'); print('
+Stacklimit',evalf(1/1048576*kernelopts(stacklimit)),'Mbyte'); print('Cputime',
+evalf(1/3600*kernelopts(cputime)),'hours') end proc;

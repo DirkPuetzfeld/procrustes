@@ -1,0 +1,9 @@
+zwischen := -(-diff(U(x0,x1,x2,x3),x1)/c^2-diff(hdd01(x0,x1,x2,x3),x0)/c^3+(2*
+V(x0,x1,x2,x3)*diff(U(x0,x1,x2,x3),x1)+1/2*diff(phi(x0,x1,x2,x3),x1))/c^4)*(1/
+2*diff(hdd01(x0,x1,x2,x3),x2)+1/2*diff(hdd02(x0,x1,x2,x3),x1))/c^3-(1/2*diff(
+hdd02(x0,x1,x2,x3),x1)-1/2*diff(hdd01(x0,x1,x2,x3),x2))/c^3*(diff(V(x0,x1,x2,
+x3),x1)/c^2-2*diff(V(x0,x1,x2,x3),x1)/c^4*V(x0,x1,x2,x3))+(1/2*diff(hdd02(x0,
+x1,x2,x3),x1)-1/2*diff(hdd01(x0,x1,x2,x3),x2))/c^3*(-diff(U(x0,x1,x2,x3),x1)/c
+^2+(1/2*diff(phi(x0,x1,x2,x3),x1)-2*U(x0,x1,x2,x3)*diff(U(x0,x1,x2,x3),x1))/c^
+4)+(1/2*diff(hdd01(x0,x1,x2,x3),x2)-1/2*diff(hdd02(x0,x1,x2,x3),x1))/c^3*(-
+diff(V(x0,x1,x2,x3),x1)/c^2+2*diff(V(x0,x1,x2,x3),x1)/c^4*V(x0,x1,x2,x3));

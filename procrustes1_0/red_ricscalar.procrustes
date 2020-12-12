@@ -1,0 +1,5 @@
+red_ricscalar := proc (CCtruncorder) local TRUNCricscalar, zwischen; global 
+ricscalar; TRUNCricscalar := subs([seq(1/(c^ii) = 0,ii = CCtruncorder .. 
+CCmaxorder)],collect(ricscalar,1/c)); ricscalar := TRUNCricscalar; if 
+CCoutputfs = 2 then zwischen := TRUNCricscalar; save zwischen, cat(
+`ricscalar.red.mpi`) end if end proc;

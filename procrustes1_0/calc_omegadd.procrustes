@@ -1,0 +1,8 @@
+calc_omegadd := proc (CCdisporder) local ii, jj, Oomegadd, Pomegadd, zwischen;
+global omegadd; for ii to 4 do for jj to 4 do omegadd[ii,jj] := 1/2*cud[ii,jj]
+-1/2*cud[jj,ii]+1/2*ud[ii]*acd[jj]-1/2*ud[jj]*acd[ii]; Oomegadd[ii,jj] := subs
+(sublist,collect(expand(omegadd[ii,jj]),1/c)); Pomegadd[ii,jj] := subs([seq(1/
+(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Oomegadd[ii,jj]),1/
+c)); print(`Rotation uu (omegadd)[`,ii-1,jj-1,`]`,subs(displist,Pomegadd[ii,jj
+])); if CCoutputfs = 2 then zwischen := omegadd[ii,jj]; save zwischen, cat(
+omegadd_,ii,_,jj,`.full.mpi`) end if end do end do end proc;

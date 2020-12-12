@@ -1,0 +1,412 @@
+{VERSION 5 0 "IBM INTEL NT" "5.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "" -1 256 "" 1 18 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }
+{CSTYLE "" -1 257 "" 1 18 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{PSTYLE "Normal
+" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 12 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 
+1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Heading 1" -1 3 1 {CSTYLE "" -1 
+-1 "Times" 1 18 0 0 0 1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 8 4 1 0 1 0 2 2 
+0 1 }{PSTYLE "Heading 2" -1 4 1 {CSTYLE "" -1 -1 "Times" 1 14 0 0 0 1 
+2 1 2 2 2 2 1 1 1 1 }1 1 0 0 8 2 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Outpu
+t" -1 256 1 {CSTYLE "" -1 -1 "Times" 1 12 0 0 0 1 2 2 2 2 2 2 1 1 1 1 
+}1 3 0 0 0 0 1 0 1 0 2 2 0 1 }}
+{SECT 0 {EXCHG {PARA 0 "" 0 "" {TEXT 256 11 "Procrustes " }{TEXT -1 5 
+"v1.0 " }{TEXT 257 14 "demo worksheet" }{TEXT -1 47 "\n\nDirk Puetzfel
+d\n\nlast update: 2006-04-06 by dp" }}}{SECT 1 {PARA 3 "" 0 "" {TEXT 
+-1 17 "Metric definition" }}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 8 "r
+estart;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 180 "Demo metric definitio
+n---------------------------------------------------------------------
+----------------------------------------------------------------------
+-------------------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 872 "xx:
+=[x0,x1,x2,x3];\n\ngdd:=[[1-2*U(xx[1],xx[2],xx[3],xx[4])/c^2+phi(xx[1]
+,xx[2],xx[3],xx[4])/c^4,hdd01(xx[1],xx[2],xx[3],xx[4])/c^3,hdd02(xx[1]
+,xx[2],xx[3],xx[4])/c^3,hdd03(xx[1],xx[2],xx[3],xx[4])/c^3],[hdd01(xx[
+1],xx[2],xx[3],xx[4])/c^3,(-1-2*V(xx[1],xx[2],xx[3],xx[4])/c^2),0,0],[
+hdd02(xx[1],xx[2],xx[3],xx[4])/c^3,0,(-1-2*V(xx[1],xx[2],xx[3],xx[4])/
+c^2),0],[hdd03(xx[1],xx[2],xx[3],xx[4])/c^3,0,0,(-1-2*V(xx[1],xx[2],xx
+[3],xx[4])/c^2)]];\n\nguu:=[[1+2*U(xx[1],xx[2],xx[3],xx[4])/c^2-phi(xx
+[1],xx[2],xx[3],xx[4])/c^4,huu01(xx[1],xx[2],xx[3],xx[4])/c^3,huu02(xx
+[1],xx[2],xx[3],xx[4])/c^3,huu03(xx[1],xx[2],xx[3],xx[4])/c^3],[huu01(
+xx[1],xx[2],xx[3],xx[4])/c^3,(-1)*(1-2*V(xx[1],xx[2],xx[3],xx[4])/c^2)
+,0,0],[huu02(xx[1],xx[2],xx[3],xx[4])/c^3,0,(-1)*(1-2*V(xx[1],xx[2],xx
+[3],xx[4])/c^2),0],[huu03(xx[1],xx[2],xx[3],xx[4])/c^3,0,0,(-1)*(1-2*V
+(xx[1],xx[2],xx[3],xx[4])/c^2)]];" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 81 "save xx,\"coordinates_demo.mpi\";\nsave gdd,\"gdd_dem
+o.mpi\";\nsave guu,\"guu_demo.mpi\";" }}}}{SECT 1 {PARA 3 "" 0 "" 
+{TEXT -1 41 "Substitution and display list definitions" }}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 8 "restart;" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 165 "Substitution list for derivative replacements (either sp
+ecify this list by hand or use the automated generation in the next se
+ction)---------------------------------" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 4342 "sublist:=[\ndiff(U(x0,x1,x2,x3),x0,x0,x0,x0)=diff(U
+(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(U(x0,x1,x2,x3),x0,x0,x0)=diff(U(t,x1,
+x2,x3),t,t,t)/c^3,\ndiff(U(x0,x1,x2,x3),x0,x0)=diff(U(t,x1,x2,x3),t,t)
+/c^2,\ndiff(U(x0,x1,x2,x3),x0)=diff(U(t,x1,x2,x3),t)/c,\nU(x0,x1,x2,x3
+)=U(t,x1,x2,x3),\ndiff(iem(x0,x1,x2,x3),x0,x0,x0,x0)=diff(iem(t,x1,x2,
+x3),t,t,t,t)/c^4,\ndiff(iem(x0,x1,x2,x3),x0,x0,x0)=diff(iem(t,x1,x2,x3
+),t,t,t)/c^3,\ndiff(iem(x0,x1,x2,x3),x0,x0)=diff(iem(t,x1,x2,x3),t,t)/
+c^2,\ndiff(iem(x0,x1,x2,x3),x0)=diff(iem(t,x1,x2,x3),t)/c,\niem(x0,x1,
+x2,x3)=iem(t,x1,x2,x3),\ndiff(phi(x0,x1,x2,x3),x0,x0,x0,x0)=diff(phi(t
+,x1,x2,x3),t,t,t,t)/c^4,\ndiff(phi(x0,x1,x2,x3),x0,x0,x0)=diff(phi(t,x
+1,x2,x3),t,t,t)/c^3,\ndiff(phi(x0,x1,x2,x3),x0,x0)=diff(phi(t,x1,x2,x3
+),t,t)/c^2,\ndiff(phi(x0,x1,x2,x3),x0)=diff(phi(t,x1,x2,x3),t)/c,\nphi
+(x0,x1,x2,x3)=phi(t,x1,x2,x3),\ndiff(V(x0,x1,x2,x3),x0,x0,x0,x0)=diff(
+V(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(V(x0,x1,x2,x3),x0,x0,x0)=diff(V(t,x1
+,x2,x3),t,t,t)/c^3,\ndiff(V(x0,x1,x2,x3),x0,x0)=diff(V(t,x1,x2,x3),t,t
+)/c^2,\ndiff(V(x0,x1,x2,x3),x0)=diff(V(t,x1,x2,x3),t)/c,\nV(x0,x1,x2,x
+3)=V(t,x1,x2,x3),\ndiff(vu01(x0,x1,x2,x3),x0,x0,x0,x0)=diff(vu01(t,x1,
+x2,x3),t,t,t,t)/c^4,\ndiff(vu01(x0,x1,x2,x3),x0,x0,x0)=diff(vu01(t,x1,
+x2,x3),t,t,t)/c^3,\ndiff(vu01(x0,x1,x2,x3),x0,x0)=diff(vu01(t,x1,x2,x3
+),t,t)/c^2,\ndiff(vu01(x0,x1,x2,x3),x0)=diff(vu01(t,x1,x2,x3),t)/c,\nv
+u01(x0,x1,x2,x3)=vu01(t,x1,x2,x3),\ndiff(vu02(x0,x1,x2,x3),x0,x0,x0,x0
+)=diff(vu02(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(vu02(x0,x1,x2,x3),x0,x0,x0
+)=diff(vu02(t,x1,x2,x3),t,t,t)/c^3,\ndiff(vu02(x0,x1,x2,x3),x0,x0)=dif
+f(vu02(t,x1,x2,x3),t,t)/c^2,\ndiff(vu02(x0,x1,x2,x3),x0)=diff(vu02(t,x
+1,x2,x3),t)/c,\nvu02(x0,x1,x2,x3)=vu02(t,x1,x2,x3),\ndiff(vu03(x0,x1,x
+2,x3),x0,x0,x0,x0)=diff(vu03(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(vu03(x0,x
+1,x2,x3),x0,x0,x0)=diff(vu03(t,x1,x2,x3),t,t,t)/c^3,\ndiff(vu03(x0,x1,
+x2,x3),x0,x0)=diff(vu03(t,x1,x2,x3),t,t)/c^2,\ndiff(vu03(x0,x1,x2,x3),
+x0)=diff(vu03(t,x1,x2,x3),t)/c,\nvu03(x0,x1,x2,x3)=vu03(t,x1,x2,x3),\n
+diff(hdd01(x0,x1,x2,x3),x0,x0,x0,x0)=diff(hdd01(t,x1,x2,x3),t,t,t,t)/c
+^4,\ndiff(hdd01(x0,x1,x2,x3),x0,x0,x0)=diff(hdd01(t,x1,x2,x3),t,t,t)/c
+^3,\ndiff(hdd01(x0,x1,x2,x3),x0,x0)=diff(hdd01(t,x1,x2,x3),t,t)/c^2,\n
+diff(hdd01(x0,x1,x2,x3),x0)=diff(hdd01(t,x1,x2,x3),t)/c,\nhdd01(x0,x1,
+x2,x3)=hdd01(t,x1,x2,x3),\ndiff(hdd02(x0,x1,x2,x3),x0,x0,x0,x0)=diff(h
+dd02(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(hdd02(x0,x1,x2,x3),x0,x0,x0)=diff
+(hdd02(t,x1,x2,x3),t,t,t)/c^3,\ndiff(hdd02(x0,x1,x2,x3),x0,x0)=diff(hd
+d02(t,x1,x2,x3),t,t)/c^2,\ndiff(hdd02(x0,x1,x2,x3),x0)=diff(hdd02(t,x1
+,x2,x3),t)/c,\nhdd02(x0,x1,x2,x3)=hdd02(t,x1,x2,x3),\ndiff(hdd03(x0,x1
+,x2,x3),x0,x0,x0,x0)=diff(hdd03(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(hdd03(
+x0,x1,x2,x3),x0,x0,x0)=diff(hdd03(t,x1,x2,x3),t,t,t)/c^3,\ndiff(hdd03(
+x0,x1,x2,x3),x0,x0)=diff(hdd03(t,x1,x2,x3),t,t)/c^2,\ndiff(hdd03(x0,x1
+,x2,x3),x0)=diff(hdd03(t,x1,x2,x3),t)/c,\nhdd03(x0,x1,x2,x3)=hdd03(t,x
+1,x2,x3),\ndiff(huu01(x0,x1,x2,x3),x0,x0,x0,x0)=diff(huu01(t,x1,x2,x3)
+,t,t,t,t)/c^4,\ndiff(huu01(x0,x1,x2,x3),x0,x0,x0)=diff(huu01(t,x1,x2,x
+3),t,t,t)/c^3,\ndiff(huu01(x0,x1,x2,x3),x0,x0)=diff(huu01(t,x1,x2,x3),
+t,t)/c^2,\ndiff(huu01(x0,x1,x2,x3),x0)=diff(huu01(t,x1,x2,x3),t)/c,\nh
+uu01(x0,x1,x2,x3)=huu01(t,x1,x2,x3),\ndiff(huu02(x0,x1,x2,x3),x0,x0,x0
+,x0)=diff(huu02(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(huu02(x0,x1,x2,x3),x0,
+x0,x0)=diff(huu02(t,x1,x2,x3),t,t,t)/c^3,\ndiff(huu02(x0,x1,x2,x3),x0,
+x0)=diff(huu02(t,x1,x2,x3),t,t)/c^2,\ndiff(huu02(x0,x1,x2,x3),x0)=diff
+(huu02(t,x1,x2,x3),t)/c,\nhuu02(x0,x1,x2,x3)=huu02(t,x1,x2,x3),\ndiff(
+huu03(x0,x1,x2,x3),x0,x0,x0,x0)=diff(huu03(t,x1,x2,x3),t,t,t,t)/c^4,\n
+diff(huu03(x0,x1,x2,x3),x0,x0,x0)=diff(huu03(t,x1,x2,x3),t,t,t)/c^3,\n
+diff(huu03(x0,x1,x2,x3),x0,x0)=diff(huu03(t,x1,x2,x3),t,t)/c^2,\ndiff(
+huu03(x0,x1,x2,x3),x0)=diff(huu03(t,x1,x2,x3),t)/c,\nhuu03(x0,x1,x2,x3
+)=huu03(t,x1,x2,x3),\ndiff(rho(x0,x1,x2,x3),x0,x0,x0,x0)=diff(rho(t,x1
+,x2,x3),t,t,t,t)/c^4,\ndiff(rho(x0,x1,x2,x3),x0,x0,x0)=diff(rho(t,x1,x
+2,x3),t,t,t)/c^3,\ndiff(rho(x0,x1,x2,x3),x0,x0)=diff(rho(t,x1,x2,x3),t
+,t)/c^2,\ndiff(rho(x0,x1,x2,x3),x0)=diff(rho(t,x1,x2,x3),t)/c,\nrho(x0
+,x1,x2,x3)=rho(t,x1,x2,x3),\ndiff(pp(x0,x1,x2,x3),x0,x0,x0,x0)=diff(pp
+(t,x1,x2,x3),t,t,t,t)/c^4,\ndiff(pp(x0,x1,x2,x3),x0,x0,x0)=diff(pp(t,x
+1,x2,x3),t,t,t)/c^3,\ndiff(pp(x0,x1,x2,x3),x0,x0)=diff(pp(t,x1,x2,x3),
+t,t)/c^2,\ndiff(pp(x0,x1,x2,x3),x0)=diff(pp(t,x1,x2,x3),t)/c,\npp(x0,x
+1,x2,x3)=pp(t,x1,x2,x3)\n]:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+32 "save sublist,\"sublist_demo.mpi\";" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 170 "Display list to produce nicer/shorter output (specify by
+ hand and use with care)----------------------------------------------
+--------------------------------------------" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 357 "displist:=[\nU(t,x1,x2,x3)=U,\nV(t,x1,x2,x3)=V,
+\nrho(t,x1,x2,x3)=rho,\npp(t,x1,x2,x3)=p,\nhdd01(t,x1,x2,x3)=hd[0,1],
+\nhdd02(t,x1,x2,x3)=hd[0,2],\nhdd03(t,x1,x2,x3)=hd[0,3],\nhuu01(t,x1,x
+2,x3)=hu[0,1],\nhuu02(t,x1,x2,x3)=hu[0,2],\nhuu03(t,x1,x2,x3)=hu[0,3],
+\nvu01(t,x1,x2,x3)=vu01,\nvu02(t,x1,x2,x3)=vu02,\nvu03(t,x1,x2,x3)=vu0
+3,\niem(t,x1,x2,x3)=Pi,\nphi(t,x1,x2,x3)=phi]:" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 34 "save displist,\"displist_demo.mpi\";" }}}}
+{SECT 1 {PARA 3 "" 0 "" {TEXT -1 37 "Assisted substitution list genera
+tion" }}{EXCHG {PARA 0 "" 0 "" {TEXT -1 125 "Automated substitution li
+st generation, function names have to be provided in the variables fun
+ctionlist1 and functionlist2. " }}{PARA 0 "" 0 "" {TEXT -1 116 "Add hi
+gher derivatives in the procedure generate_sublist if required. Use th
+is routine if you do not want to specify" }}{PARA 0 "" 0 "" {TEXT -1 
+30 "the substitution list by hand." }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 8 "restart:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+1062 "#---------------------------------------------------------------
+--------------------------------\n# Generate substitution list from tw
+o lists\n#\n#---------------------------------------------------------
+--------------------------------------\ngenerate_sublist:=proc(functio
+nlist1,functionlist2)\nlocal zwischen,aa:\nglobal sublist:\nsublist:=[
+]:\nif nops(functionlist1)=nops(functionlist2) then\n for aa from 1 to
+ nops(functionlist1) do \n  zwischen:=[diff(functionlist1[aa],xx[1],xx
+[1],xx[1],xx[1])=diff(functionlist2[aa],timevar[1],timevar[1],timevar[
+1],timevar[1])/c^4,\n             diff(functionlist1[aa],xx[1],xx[1],x
+x[1])=diff(functionlist2[aa],timevar[1],timevar[1],timevar[1])/c^3,\n \+
+            diff(functionlist1[aa],xx[1],xx[1])=diff(functionlist2[aa]
+,timevar[1],timevar[1])/c^2,\n             diff(functionlist1[aa],xx[1
+])=diff(functionlist2[aa],timevar[1])/c,\n                  functionli
+st1[aa]=functionlist2[aa]];\n  sublist:=[op(sublist),op(zwischen)]:\n \+
+od:\n else print(`Number of arguments in functionlist1 and functionlis
+t2 does not match!`);\nfi:\nend proc:" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 163 "General coordinate and time coordinate specification----
+----------------------------------------------------------------------
+-------------------------------------" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 32 "xx:=[x0,x1,x2,x3];\ntimevar:=[t];" }}}{EXCHG {PARA 0 
+"" 0 "" {TEXT -1 160 "Lists with function names and time variable depe
+ndence----------------------------------------------------------------
+------------------------------------------" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 259 "functionlist1:=[U(xx[1],xx[2],xx[3],xx[4]),phi(xx[
+1],xx[2],xx[3],xx[4]),hdd01(xx[1],xx[2],xx[3],xx[4]),hdd02(xx[1],xx[2]
+,xx[3],xx[4]),hdd03(xx[1],xx[2],xx[3],xx[4]),huu01(xx[1],xx[2],xx[3],x
+x[4]),huu02(xx[1],xx[2],xx[3],xx[4]),huu03(xx[1],xx[2],xx[3],xx[4])];
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 299 "functionlist2:=[U(time
+var[1],xx[2],xx[3],xx[4]),phi(timevar[1],xx[2],xx[3],xx[4]),hdd01(time
+var[1],xx[2],xx[3],xx[4]),hdd02(timevar[1],xx[2],xx[3],xx[4]),hdd03(ti
+mevar[1],xx[2],xx[3],xx[4]),huu01(timevar[1],xx[2],xx[3],xx[4]),huu02(
+timevar[1],xx[2],xx[3],xx[4]),huu03(timevar[1],xx[2],xx[3],xx[4])];" }
+}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 165 "Generate, save, and display the
+ substitution list----------------------------------------------------
+----------------------------------------------------------------" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 46 "generate_sublist(functionlis
+t1,functionlist2):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 47 "save \+
+sublist,cat(`sublist_automated_demo.mpi`);" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 8 "sublist;" }}}}{SECT 1 {PARA 3 "" 0 "" {TEXT -1 16 "D
+emo calculation" }}{EXCHG {PARA 0 "" 0 "" {TEXT -1 122 "Small demo cal
+culation and suggestion for the general structure of a worksheet to be
+ used in combination with the package." }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 8 "restart:" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 168 "Load
+ desired routines from package directory------------------------------
+----------------------------------------------------------------------
+------------------------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+1516 "routine_list := [\"system_status\", \"fapprox\", \"gapprox\", \"
+disp_component\", \"load_component\", \"check_velnorm\", \"check_metri
+cid\", \"check_decomposition\", \"calc_harm_gc\", \"calc_harm_gc_alt\"
+, \"calc_pn_gc\", \"calc_damour_gc\", \"calc_uu\", \"red_uu\", \"load_
+uu\", \"calc_ud\", \"red_ud\", \"load_ud\", \"calc_tupup\", \"red_tupu
+p\", \"load_tupup\", \"calc_tdndn\", \"red_tdndn\", \"load_tdndn\", \"
+calc_tupdn\", \"red_tupdn\", \"load_tupdn\", \"calc_rhs\", \"red_rhs\"
+, \"load_rhs\", \"calc_condndndn\", \"red_condndndn\", \"load_condndnd
+n\", \"calc_conupdndn\", \"red_conupdndn\", \"load_conupdndn\", \"calc
+_ctupup\", \"red_ctupup\", \"load_ctupup\", \"calc_eom\", \"red_eom\",
+ \"load_eom\", \"calc_ricdndn\", \"red_ricdndn\", \"load_ricdndn\", \"
+calc_ricupdn\", \"red_ricupdn\", \"load_ricupdn\", \"calc_ricscalar\",
+ \"red_ricscalar\", \"load_ricscalar\", \"calc_riemupdndndn\", \"red_r
+iemupdndndn\", \"load_riemupdndndn\", \"calc_riemdndndndn\", \"red_rie
+mdndndndn\", \"load_riemdndndndn\", \"calc_weyldndndndn\", \"red_weyld
+ndndndn\", \"load_weyldndndndn\", \"calc_detguu\", \"red_detguu\", \"l
+oad_detguu\", \"calc_detgdd\", \"red_detgdd\", \"load_detgdd\", \"calc
+_pemtupup\", \"red_pemtupup\", \"load_pemtupup\", \"calc_thetaupup\", \+
+\"red_thetaupup\", \"load_thetaupup\", \"calc_thetaupuppdn\", \"red_th
+etaupuppdn\", \"load_thetaupuppdn\", \"calc_cuu\", \"red_cuu\", \"load
+_cuu\", \"calc_cud\", \"red_cud\", \"load_cud\", \"calc_thetascalar\",
+ \"red_thetascalar\", \"load_thetascalar\", \"calc_acd\", \"red_acd\",
+ \"load_acd\", \"calc_omegadd\", \"red_omegadd\", \"load_omegadd\", \"
+calc_thetadd\", \"red_thetadd\", \"load_thetadd\", \"calc_sigmadd\", \+
+\"red_sigmadd\", \"load_sigmadd\"]:" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 37 "CCprocrustes_dir:=\"./procrustes1_0/\";" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 100 "for aa from 1 to nops(routine_list
+) do read cat(CCprocrustes_dir,routine_list[aa],\".procrustes\") od:" 
+}}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 167 "Maple kernel options (set pref
+erred garbage collection frequency)-----------------------------------
+-------------------------------------------------------------------" }
+}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 176 "kernelopts(gcfreq=10^8); \+
+    #maximum value for gc is (10^18 on 64bit) (10^8 on 32bit)\nkernelo
+pts(printbytes=true); #toggles the output of the memory used in comman
+d line mode " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "system_stat
+us();" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 177 "Initialize global switc
+hes-------------------------------------------------------------------
+----------------------------------------------------------------------
+--------------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 283 "CCoutput
+fs :=2:   #global switch for the use of outputfiles for every calulate
+d expression (2=yes / else=no)\nCCtaylor   :=3:   #accuracy of the ser
+ies approximation in the velocity calculation\nCCmaxorder :=200: #orde
+r up to which terms are eliminated in reduction and output routines" }
+}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 179 "Initialize metric--------------
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+--------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 28 "read \"coordina
+tes_demo.mpi\";" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 20 "read \"g
+dd_demo.mpi\";" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 20 "read \"gu
+u_demo.mpi\";" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 178 "Print system st
+atus------------------------------------------------------------------
+----------------------------------------------------------------------
+-----------------------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "
+system_status();" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 178 "Initialize s
+ubstitution and display lists-----------------------------------------
+----------------------------------------------------------------------
+--------------------------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+24 "read \"sublist_demo.mpi\":" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 25 "read \"displist_demo.mpi\":" }}}{EXCHG {PARA 0 "" 0 "" {TEXT 
+-1 174 "Perform calculation with the demo metric----------------------
+----------------------------------------------------------------------
+------------------------------------------" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 75 "calc_uu(5);red_uu(5); #calculate and reduce the con
+travariant four velocity" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 71 
+"calc_ud(5);red_ud(5); #calculate and reduce the covariant four veloci
+ty" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 97 "calc_tupup(4);red_tup
+up(4); #calculate and reduce the contravariant EM tensor for a perfect
+ fluid" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 93 "calc_tdndn(4);red
+_tdndn(4); #calculate and reduce the covariant EM tensor for a perfect
+ fluid" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 89 "calc_tupdn(4);red
+_tupdn(4); #calculate and reduce the mixed EM tensor for a perfect flu
+id" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 76 "calc_rhs(6);red_rhs(6
+); #calculate and reduce the RHS of the field equations" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 91 "calc_condndndn(5);red_condndndn(5);
+ #calculate and reduce the connection with lower indices" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 91 "calc_conupdndn(5);red_conupdndn(5);
+ #calculate and reduce the connection with mixed indices" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 94 "calc_ctupup(1);red_ctupup(10); #cal
+culate and reduce the covariant derivative of the EM tensor" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 68 "calc_eom(3);red_eom(5); #cac
+ulate and reduce the equations of motion" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 80 "calc_ricdndn(5);red_ricdndn(5); #calculate and reduce
+ the covariant Ricci tensor" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+76 "calc_ricupdn(5);red_ricupdn(5); #calculate and reduce the mixed Ri
+cci tensor" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 74 "calc_ricscala
+r(3);red_ricscalar(5); #calculate and reduce the Ricci scalar" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 92 "calc_riemupdndndn(4);red_rie
+mupdndndn(6); #calculate and reduce the Riemann curvature tensor" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 102 "calc_riemdndndndn(4);red_ri
+emdndndndn(6); #calculate and reduce the covariant Riemann curvature t
+ensor" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 82 "calc_weyldndndndn(
+4);red_weyldndndndn(6); #calculate and reduce the Weyl curvature" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 74 "calc_detgdd(4);red_detgdd(5)
+; #calculate and reduce the metric determinant" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 78 "calc_pemtupup(3);red_pemtupup(5); #calculate a
+nd reduce the LL EM pseudotensor" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 75 "calc_thetaupup(3);red_thetaupup(5); #calculate and re
+duce the LL EM complex" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 99 "c
+alc_thetaupuppdn(3);red_thetaupuppdn(8); #calculate and reduce the der
+ivative of the LL EM complex" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 95 "calc_cuu(4);red_cuu(6); #calculate and reduce the derivative of \+
+the contravariant four velocity" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 91 "calc_cud(4);red_cud(6); #calculate and reduce the derivative o
+f the covariant four velocity" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 82 "calc_thetascalar(4);red_thetascalar(6); #calculate and reduce th
+e expansion scalar" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 62 "calc_
+acd(4);red_acd(6); #calculate and reduce the acceleration" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 66 "calc_omegadd(4);red_omegadd(6); #ca
+lculate and reduce the rotation" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 90 "calc_thetadd(4);red_thetadd(6); #calculate and reduce the symm
+etric part of the projection" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 63 "calc_sigmadd(4);red_sigmadd(6); #calculate and reduce the shear
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 60 "check_decomposition(4);
+ #check the kinematical decomposition" }}}{SECT 0 {PARA 4 "" 0 "" 
+{TEXT -1 23 "Load & display examples" }}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 8 "restart:" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 168 "Load
+ desired routines from package directory------------------------------
+----------------------------------------------------------------------
+------------------------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+1516 "routine_list := [\"system_status\", \"fapprox\", \"gapprox\", \"
+disp_component\", \"load_component\", \"check_velnorm\", \"check_metri
+cid\", \"check_decomposition\", \"calc_harm_gc\", \"calc_harm_gc_alt\"
+, \"calc_pn_gc\", \"calc_damour_gc\", \"calc_uu\", \"red_uu\", \"load_
+uu\", \"calc_ud\", \"red_ud\", \"load_ud\", \"calc_tupup\", \"red_tupu
+p\", \"load_tupup\", \"calc_tdndn\", \"red_tdndn\", \"load_tdndn\", \"
+calc_tupdn\", \"red_tupdn\", \"load_tupdn\", \"calc_rhs\", \"red_rhs\"
+, \"load_rhs\", \"calc_condndndn\", \"red_condndndn\", \"load_condndnd
+n\", \"calc_conupdndn\", \"red_conupdndn\", \"load_conupdndn\", \"calc
+_ctupup\", \"red_ctupup\", \"load_ctupup\", \"calc_eom\", \"red_eom\",
+ \"load_eom\", \"calc_ricdndn\", \"red_ricdndn\", \"load_ricdndn\", \"
+calc_ricupdn\", \"red_ricupdn\", \"load_ricupdn\", \"calc_ricscalar\",
+ \"red_ricscalar\", \"load_ricscalar\", \"calc_riemupdndndn\", \"red_r
+iemupdndndn\", \"load_riemupdndndn\", \"calc_riemdndndndn\", \"red_rie
+mdndndndn\", \"load_riemdndndndn\", \"calc_weyldndndndn\", \"red_weyld
+ndndndn\", \"load_weyldndndndn\", \"calc_detguu\", \"red_detguu\", \"l
+oad_detguu\", \"calc_detgdd\", \"red_detgdd\", \"load_detgdd\", \"calc
+_pemtupup\", \"red_pemtupup\", \"load_pemtupup\", \"calc_thetaupup\", \+
+\"red_thetaupup\", \"load_thetaupup\", \"calc_thetaupuppdn\", \"red_th
+etaupuppdn\", \"load_thetaupuppdn\", \"calc_cuu\", \"red_cuu\", \"load
+_cuu\", \"calc_cud\", \"red_cud\", \"load_cud\", \"calc_thetascalar\",
+ \"red_thetascalar\", \"load_thetascalar\", \"calc_acd\", \"red_acd\",
+ \"load_acd\", \"calc_omegadd\", \"red_omegadd\", \"load_omegadd\", \"
+calc_thetadd\", \"red_thetadd\", \"load_thetadd\", \"calc_sigmadd\", \+
+\"red_sigmadd\", \"load_sigmadd\"]:" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 37 "CCprocrustes_dir:=\"./procrustes1_0/\";" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 100 "for aa from 1 to nops(routine_list
+) do read cat(CCprocrustes_dir,routine_list[aa],\".procrustes\") od:" 
+}}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "system_status();" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 178 "Initialize global switches-------
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+-----" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "CCmaxorder:=200;" 
+}}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 176 "Initialize substitution and di
+splay lists-----------------------------------------------------------
+----------------------------------------------------------------------
+------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 50 "read \"sublist_de
+mo.mpi\":\nread \"displist_demo.mpi\":" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 174 "Load & display examples---------------------------------
+----------------------------------------------------------------------
+------------------------------------------------" }}}{EXCHG {PARA 0 ">
+ " 0 "" {MPLTEXT 1 0 50 "load_component('uu',[1],1); #object with one \+
+index" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 57 "load_component('tu
+pup',[1,2],2); #object with two indices" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 50 "load_component('thetascalar',[],2); #scalar object" }
+}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 70 "test_uu[1]:=load_component
+('uu',[1],2): #assigment of single component" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 138 "for aa from 1 to 4 do test_uu[aa]:=load_compone
+nt('uu',[aa],2) od: #assignment of all components by hand (equivalent \+
+to load_uu() command)" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 99 "di
+sp_component('test_uu[1]',3); #display one of the components which wer
+e just loaded and assigned " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+69 "load_uu(2); #alternatively use the load command for the whole obje
+ct " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 49 "seq(is(test_uu[aa]=u
+u[aa]),aa=1..4); #crosscheck " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 99 "load_tupup(1); #example of the load command which automatically \+
+loads and displays the whole object" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 54 "disp_component('tupup[2,2]',2); #display one componen
+t" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 83 "seq(seq(disp_component
+('tupup[aa,bb]',2),aa=1..4),bb=1..4); #display all components" }}}}
+{SECT 0 {PARA 4 "" 0 "" {TEXT -1 26 "Load examples & crosscheck" }}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 8 "restart:" }}}{EXCHG {PARA 0 "
+" 0 "" {TEXT -1 168 "Load desired routines from package directory-----
+----------------------------------------------------------------------
+-------------------------------------------------" }}}{EXCHG {PARA 0 "
+> " 0 "" {MPLTEXT 1 0 1516 "routine_list := [\"system_status\", \"fapp
+rox\", \"gapprox\", \"disp_component\", \"load_component\", \"check_ve
+lnorm\", \"check_metricid\", \"check_decomposition\", \"calc_harm_gc\"
+, \"calc_harm_gc_alt\", \"calc_pn_gc\", \"calc_damour_gc\", \"calc_uu
+\", \"red_uu\", \"load_uu\", \"calc_ud\", \"red_ud\", \"load_ud\", \"c
+alc_tupup\", \"red_tupup\", \"load_tupup\", \"calc_tdndn\", \"red_tdnd
+n\", \"load_tdndn\", \"calc_tupdn\", \"red_tupdn\", \"load_tupdn\", \"
+calc_rhs\", \"red_rhs\", \"load_rhs\", \"calc_condndndn\", \"red_condn
+dndn\", \"load_condndndn\", \"calc_conupdndn\", \"red_conupdndn\", \"l
+oad_conupdndn\", \"calc_ctupup\", \"red_ctupup\", \"load_ctupup\", \"c
+alc_eom\", \"red_eom\", \"load_eom\", \"calc_ricdndn\", \"red_ricdndn
+\", \"load_ricdndn\", \"calc_ricupdn\", \"red_ricupdn\", \"load_ricupd
+n\", \"calc_ricscalar\", \"red_ricscalar\", \"load_ricscalar\", \"calc
+_riemupdndndn\", \"red_riemupdndndn\", \"load_riemupdndndn\", \"calc_r
+iemdndndndn\", \"red_riemdndndndn\", \"load_riemdndndndn\", \"calc_wey
+ldndndndn\", \"red_weyldndndndn\", \"load_weyldndndndn\", \"calc_detgu
+u\", \"red_detguu\", \"load_detguu\", \"calc_detgdd\", \"red_detgdd\",
+ \"load_detgdd\", \"calc_pemtupup\", \"red_pemtupup\", \"load_pemtupup
+\", \"calc_thetaupup\", \"red_thetaupup\", \"load_thetaupup\", \"calc_
+thetaupuppdn\", \"red_thetaupuppdn\", \"load_thetaupuppdn\", \"calc_cu
+u\", \"red_cuu\", \"load_cuu\", \"calc_cud\", \"red_cud\", \"load_cud
+\", \"calc_thetascalar\", \"red_thetascalar\", \"load_thetascalar\", \+
+\"calc_acd\", \"red_acd\", \"load_acd\", \"calc_omegadd\", \"red_omega
+dd\", \"load_omegadd\", \"calc_thetadd\", \"red_thetadd\", \"load_thet
+add\", \"calc_sigmadd\", \"red_sigmadd\", \"load_sigmadd\"]:" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 37 "CCprocrustes_dir:=\"./procru
+stes1_0/\";" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 100 "for aa from
+ 1 to nops(routine_list) do read cat(CCprocrustes_dir,routine_list[aa]
+,\".procrustes\") od:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "sy
+stem_status();" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 164 "Load all previ
+ously calculated quantities & crosscheck with precalculated results---
+----------------------------------------------------------------------
+----------" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 46 "CCredfull:=1;
+ #use files with .full.mpi suffix" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 669 "load_uu(CCredfull);\nload_ud(CCredfull);\nload_tupup
+(CCredfull);\nload_tdndn(CCredfull);\nload_tupdn(CCredfull);\nload_rhs
+(CCredfull);\nload_condndndn(CCredfull);\nload_conupdndn(CCredfull);\n
+load_ctupup(CCredfull);\nload_eom(CCredfull);\nload_ricdndn(CCredfull)
+;\nload_ricupdn(CCredfull);\nload_ricscalar(CCredfull);\nload_riemupdn
+dndn(CCredfull);\nload_riemdndndndn(CCredfull);\nload_weyldndndndn(CCr
+edfull);\nload_detgdd(CCredfull);\nload_pemtupup(CCredfull);\nload_the
+taupup(CCredfull);\nload_thetaupuppdn(CCredfull);\nload_cuu(CCredfull)
+;\nload_cud(CCredfull);\nload_thetascalar(CCredfull);\nload_acd(CCredf
+ull);\nload_omegadd(CCredfull);\nload_thetadd(CCredfull);\nload_sigmad
+d(CCredfull);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 885 "#--------
+----------------------------------------------------------------------
+-----------------\n# Crosscheck if demo calculation was performed corr
+ectly \n#\n#----------------------------------------------------------
+-------------------------------------\ncrosscheck:=proc()\nglobal zwis
+chen:\nlocal aa,bb,cc,dd,testrun_riemupdndndn,CCflag:\nCCflag:=0:\nfor
+ aa from 1 to 4 do \n for bb from 1 to 4 do\n  for cc from 1 to 4 do\n
+   for dd from 1 to 4 do\n    read cat(`./testrun_procrustes1_0/riemup
+dndndn_`,aa,`_`,bb,`_`,cc,`_`,dd,`.full.mpi`): \n    testrun_riemupdnd
+ndn[aa,bb,cc,dd]:=zwischen:\n    if is(testrun_riemupdndndn[aa,bb,cc,d
+d]=riemupdndndn[aa,bb,cc,dd])<>true then CCflag:=1: fi: \n   od:\n  od
+:\n od:\nod:\nif CCflag=0 then print(`Demo calculation passes crossche
+ck`); else print(`Demo calculation does NOT pass crosscheck (maybe due
+ to a change in the demo metric etc.?)`); fi:\nend proc;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 13 "crosscheck();" }}}}}}{MARK "4" 0 }
+{VIEWOPTS 1 1 0 3 4 1802 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }

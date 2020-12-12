@@ -1,0 +1,8 @@
+calc_thetadd := proc (CCdisporder) local ii, jj, Othetadd, Pthetadd, zwischen;
+global thetadd; for ii to 4 do for jj to 4 do thetadd[ii,jj] := 1/2*cud[ii,jj]
++1/2*cud[jj,ii]-1/2*ud[ii]*acd[jj]-1/2*ud[jj]*acd[ii]; Othetadd[ii,jj] := subs
+(sublist,collect(expand(thetadd[ii,jj]),1/c)); Pthetadd[ii,jj] := subs([seq(1/
+(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Othetadd[ii,jj]),1/
+c)); print(`Shear with trace uu (thetadd)[`,ii-1,jj-1,`]`,subs(displist,
+Pthetadd[ii,jj])); if CCoutputfs = 2 then zwischen := thetadd[ii,jj]; save 
+zwischen, cat(thetadd_,ii,_,jj,`.full.mpi`) end if end do end do end proc;

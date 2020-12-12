@@ -1,0 +1,3 @@
+load_condndndn := proc (CCredfull) local aa, bb, cc; global condndndn; for aa
+to 4 do for bb to 4 do for cc to 4 do condndndn[aa,bb,cc] := load_component(
+condndndn,[aa, bb, cc],CCredfull) end do end do end do; RETURN() end proc;

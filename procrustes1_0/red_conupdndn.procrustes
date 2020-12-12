@@ -1,0 +1,7 @@
+red_conupdndn := proc (CCtruncorder) local aa, bb, cc, zwischen, 
+TRUNCconupdndn; global conupdndn; for cc to 4 do for aa to 4 do for bb to 4 do
+TRUNCconupdndn[cc,aa,bb] := subs([seq(1/(c^ii) = 0,ii = CCtruncorder .. 
+CCmaxorder)],collect(expand(conupdndn[cc,aa,bb]),1/c)); conupdndn[cc,aa,bb] :=
+TRUNCconupdndn[cc,aa,bb]; if CCoutputfs = 2 then zwischen := TRUNCconupdndn[cc
+,aa,bb]; save zwischen, cat(conupdndn_,cc,_,aa,_,bb,`.red.mpi`) end if end do
+end do end do end proc;

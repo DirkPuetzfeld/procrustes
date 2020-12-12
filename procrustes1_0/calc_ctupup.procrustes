@@ -1,0 +1,10 @@
+calc_ctupup := proc (CCdisporder) local aa, bb, cc, zwischen, Octupup, Pctupup
+; global ctupup; for aa to 4 do for bb to 4 do for cc to 4 do ctupup[aa,bb,cc]
+:= diff(tupup[aa,bb],xx[cc])+add(conupdndn[aa,dd,cc]*tupup[dd,bb],dd = 1 .. 4)
++add(conupdndn[bb,dd,cc]*tupup[aa,dd],dd = 1 .. 4); Octupup[aa,bb,cc] := subs(
+sublist,collect(expand(ctupup[aa,bb,cc]),1/c)); Pctupup[aa,bb,cc] := subs([seq
+(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Octupup[aa,bb,cc
+]),1/c)); print(`Covariant derivative EMT (ctupup)[`,aa-1,bb-1,cc-1,`]`,subs(
+displist,Pctupup[aa,bb,cc])); if CCoutputfs = 2 then zwischen := ctupup[aa,bb,
+cc]; save zwischen, cat(ctupup_,aa,_,bb,_,cc,`.full.mpi`) end if end do end do
+end do end proc;

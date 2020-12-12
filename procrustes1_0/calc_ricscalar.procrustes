@@ -1,0 +1,7 @@
+calc_ricscalar := proc (CCdisporder) local zwischen, Oricscalar, Pricscalar; 
+global ricscalar; ricscalar := add(ricupdn[aa,aa],aa = 1 .. 4); Oricscalar :=
+subs(sublist,collect(expand(ricscalar),1/c)); Pricscalar := subs([seq(1/(c^ii)
+= 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Oricscalar),1/c)); print(
+`Ricci scalar (ricscalar)`,subs(displist,Pricscalar)); if CCoutputfs = 2 then
+zwischen := ricscalar; save zwischen, cat(`ricscalar.full.mpi`) end if end 
+proc;

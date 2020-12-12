@@ -1,0 +1,2 @@
+load_detgdd := proc (CCredfull) global detgdd; detgdd := load_component(detgdd
+,[],CCredfull); RETURN() end proc;

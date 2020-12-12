@@ -1,0 +1,12 @@
+calc_ricdndn := proc (CCdisporder) local ii, jj, zwischen, Oricdndn, Pricdndn;
+global ricdndn; for ii to 4 do for jj to 4 do ricdndn[ii,jj] := 1/2*add(add(
+guu[aa,bb]*(diff(gdd[ii,jj],xx[aa],xx[bb])+diff(gdd[aa,bb],xx[ii],xx[jj])-diff
+(gdd[aa,jj],xx[ii],xx[bb])-diff(gdd[ii,bb],xx[aa],xx[jj])),aa = 1 .. 4),bb = 1
+.. 4)+add(add(add(add(guu[aa,bb]*guu[dd,ee]*(condndndn[ee,ii,jj]*condndndn[dd,
+aa,bb]-condndndn[dd,ii,bb]*condndndn[ee,aa,jj]),aa = 1 .. 4),bb = 1 .. 4),dd =
+1 .. 4),ee = 1 .. 4); Oricdndn[ii,jj] := subs(sublist,collect(expand(ricdndn[
+ii,jj]),1/c)); Pricdndn[ii,jj] := subs([seq(1/(c^ii) = 0,ii = CCdisporder .. 
+CCmaxorder)],collect(expand(Oricdndn[ii,jj]),1/c)); print(`Ricci (ricdndn)[`,
+ii-1,jj-1,`]`,subs(displist,Pricdndn[ii,jj])); if CCoutputfs = 2 then zwischen
+:= ricdndn[ii,jj]; save zwischen, cat(ricdndn_,ii,_,jj,`.full.mpi`) end if end
+do end do end proc;

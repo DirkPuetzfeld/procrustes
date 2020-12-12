@@ -1,0 +1,9 @@
+load_component := proc (obname, index, CCredfull) local aa, file_name; global
+zwischen; if CCredfull = 1 then if 0 < nops(index) then file_name := convert(
+cat(obname,seq(cat(_,index[bb]),bb = 1 .. nops(index)),`.full.mpi`),string) 
+end if; if nops(index) = 0 then file_name := convert(cat(obname,`.full.mpi`),
+string) end if end if; if CCredfull = 2 then if 0 < nops(index) then file_name
+:= convert(cat(obname,seq(cat(_,index[bb]),bb = 1 .. nops(index)),`.red.mpi`),
+string) end if; if nops(index) = 0 then file_name := convert(cat(obname,
+`.red.mpi`),string) end if end if; print(file_name); read file_name; RETURN(
+zwischen) end proc;

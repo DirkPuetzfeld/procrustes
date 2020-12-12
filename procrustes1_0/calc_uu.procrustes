@@ -1,0 +1,10 @@
+calc_uu := proc (CCdisporder) local aa, zwischen, vuu, Ouu, Puu; global uu; uu
+[1] := subs(xxx = gdd[1,1]+2*add(gdd[1,ii]*vuu[ii]/c,ii = 2 .. 4)+add(add(gdd[
+ii,jj]*vuu[ii]*vuu[jj]/c^2,jj = 2 .. 4),ii = 2 .. 4),fapprox(xxx,CCtaylor,1));
+for aa from 2 to 4 do uu[aa] := uu[1]*vuu[aa]/c end do; vuu[2] := vu01(x0,x1,
+x2,x3); vuu[3] := vu02(x0,x1,x2,x3); vuu[4] := vu03(x0,x1,x2,x3); for aa to 4
+do Ouu[aa] := subs(sublist,collect(expand(uu[aa]),1/c)); Puu[aa] := subs([seq(
+1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Ouu[aa]),1/c)); 
+print(`Velocity up[`,aa-1,`]`,subs(displist,Puu[aa])); if CCoutputfs = 2 then
+zwischen := uu[aa]; save zwischen, cat(uu_,aa,`.full.mpi`) end if end do end 
+proc;

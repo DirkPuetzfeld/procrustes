@@ -1,0 +1,9 @@
+calc_damour_gc := proc (CCdisporder) local aa, bb, zwischen, Odamour_gc, 
+Pdamour_gc; global damour_gc; for aa from 2 to 4 do for bb from 2 to 4 do 
+damour_gc[aa,bb] := gdd[1,1]*gdd[aa,bb]-1; Odamour_gc[aa,bb] := subs(sublist,
+collect(expand(damour_gc[aa,bb]),1/c)); Pdamour_gc[aa,bb] := subs([seq(1/(c^ii
+) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Odamour_gc[aa,bb]),1/c))
+; print(`Gauge condition Damour et al (damour_gc)[`,aa-1,bb-1,`]`,subs(
+displist,Pdamour_gc[aa,bb])); if CCoutputfs = 2 then zwischen := damour_gc[aa,
+bb]; save zwischen, cat(damour_gc_,aa,_,bb,`.full.mpi`) end if end do end do 
+end proc;

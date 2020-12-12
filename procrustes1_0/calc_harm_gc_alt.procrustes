@@ -1,0 +1,9 @@
+calc_harm_gc_alt := proc (CCdisporder) local aa, cc, zwischen, Oharm_gc_alt, 
+Pharm_gc_alt; global harm_gc_alt; for cc to 4 do harm_gc_alt[cc] := add(add(
+guu[aa,bb]*conupdndn[cc,aa,bb],aa = 1 .. 4),bb = 1 .. 4) end do; for aa to 4 
+do Oharm_gc_alt[aa] := subs(sublist,collect(expand(harm_gc_alt[aa]),1/c)); 
+Pharm_gc_alt[aa] := subs([seq(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],
+collect(expand(Oharm_gc_alt[aa]),1/c)); print(
+`Harmonic gauge condition (harm_gc_alt)[`,aa-1,`]`,subs(displist,Pharm_gc_alt[
+aa])); if CCoutputfs = 2 then zwischen := harm_gc_alt[aa]; save zwischen, cat(
+harm_gc_alt_,aa,`.full.mpi`) end if end do end proc;

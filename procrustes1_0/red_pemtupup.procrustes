@@ -1,0 +1,6 @@
+red_pemtupup := proc (CCtruncorder) local aa, bb, TRUNCpemtupup, zwischen; 
+global pemtupup; for aa to 4 do for bb to 4 do TRUNCpemtupup[aa,bb] := subs([
+seq(1/(c^ii) = 0,ii = CCtruncorder .. CCmaxorder)],collect(pemtupup[aa,bb],1/c
+)); pemtupup[aa,bb] := TRUNCpemtupup[aa,bb]; if CCoutputfs = 2 then zwischen 
+:= TRUNCpemtupup[aa,bb]; save zwischen, cat(pemtupup_,aa,_,bb,`.red.mpi`) end
+if end do end do end proc;

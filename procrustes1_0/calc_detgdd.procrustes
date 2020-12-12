@@ -1,0 +1,15 @@
+calc_detgdd := proc (CCdisporder) local zwischen, Odetgdd, Pdetgdd; global 
+detgdd; detgdd := gdd[1,1]*(gdd[2,2]*gdd[3,3]*gdd[4,4]+gdd[2,3]*gdd[3,4]*gdd[4
+,2]+gdd[2,4]*gdd[3,2]*gdd[4,4]-gdd[4,2]*gdd[3,3]*gdd[2,4]-gdd[4,3]*gdd[3,4]*
+gdd[2,2]-gdd[4,4]*gdd[3,2]*gdd[2,3])-gdd[2,1]*(gdd[1,2]*gdd[3,3]*gdd[4,4]+gdd[
+1,3]*gdd[3,4]*gdd[4,2]+gdd[1,4]*gdd[3,2]*gdd[4,3]-gdd[4,2]*gdd[3,3]*gdd[1,4]-
+gdd[4,3]*gdd[3,4]*gdd[1,2]-gdd[4,4]*gdd[3,2]*gdd[1,3])+gdd[3,1]*(gdd[1,2]*gdd[
+2,3]*gdd[4,4]+gdd[1,3]*gdd[2,4]*gdd[4,2]+gdd[1,4]*gdd[2,2]*gdd[4,3]-gdd[4,2]*
+gdd[2,3]*gdd[1,4]-gdd[4,3]*gdd[2,4]*gdd[1,2]-gdd[4,4]*gdd[2,2]*gdd[1,3])-gdd[4
+,1]*(gdd[1,2]*gdd[2,3]*gdd[3,4]+gdd[1,3]*gdd[2,4]*gdd[3,2]+gdd[1,4]*gdd[2,2]*
+gdd[3,3]-gdd[3,2]*gdd[2,3]*gdd[1,4]-gdd[3,3]*gdd[2,4]*gdd[1,2]-gdd[3,4]*gdd[2,
+2]*gdd[1,3]); Odetgdd := subs(sublist,collect(expand(detgdd),1/c)); Pdetgdd :=
+subs([seq(1/(c^ii) = 0,ii = CCdisporder .. CCmaxorder)],collect(expand(Odetgdd
+),1/c)); print(`Determinant gdd (detgdd)`,subs(displist,Pdetgdd)); if 
+CCoutputfs = 2 then zwischen := detgdd; save zwischen, cat(`detgdd.full.mpi`)
+end if end proc;
