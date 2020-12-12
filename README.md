@@ -5,10 +5,6 @@
 
  A computer algebra package for post-Newtonian calculations
 
- Dirk Puetzfeld
- 
- last update: 2006-04-19 by dp
-
 -------------------------------------------------------------------------
 
 The PROCRUSTES package represents a collection of routines for the 
